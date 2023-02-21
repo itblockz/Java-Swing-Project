@@ -1,4 +1,4 @@
-package Nutni;
+package Part1;
 import javax.swing.*;
 public class Main{
     //สร้างหน้าจอเกม
