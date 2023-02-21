@@ -1,22 +1,19 @@
 package source;
 
-public class Gravity {
-    const GRAVITY = 10;
-const TERMINAL_VELOCITY = 300;
+import javax.swing.JFrame;
 
-object Player 
-{
-    int vertical_speed = 0;
-    int vertical_position;  
+public class App {
+    private JFrame f;
+    public App(){
+        f = new JFrame("Game");
+        f.setSize(600, 700);
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        detailComponents();
+        f.setVisible(true);
+    }
 
-    function fall ()
-    {
-        this.vertical_speed = this.vertical_speed + GRAVITY;
-        if (this.vertical_speed > TERMINAL_VELOCITY)
-        {
-            this.vertical_speed = TERMINAL_VELOCITY;
-        }
-        this.vertical_position = this.vertical_position - this.vertical_speed;
+    private void detailComponents(){
+        
     }
 }
-}
+
