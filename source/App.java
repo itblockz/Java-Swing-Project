@@ -20,33 +20,37 @@ public class App {
     }
 
     private void detailComponents(){
-        Circle player = new Circle(40, 600, 10, 200, Color.YELLOW);
+        Circle player = new Circle(100, 500, 50, 200, Color.YELLOW);
         List<Circle> list = new ArrayList<>();
-        Circle a = new Circle(60, 50, 50, 500, Color.WHITE);
+        Circle a = new Circle(120, 50, 10, 500, Color.WHITE);
+        Circle b = new Circle(170, 50, 20, 500, Color.WHITE);
         list.add(a);
+        list.add(b);
         f.add(new JPanel() {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
                 setBackground(Color.BLACK);
                 draw(player, g);
-                draw(a, g);
-                if (collision(player, list).size() == 0) {
-                    gravity(a, true);
+                for (Circle c : list) {
+                    draw(c, g);
+                    gravity(c, true);
                 }
-                else {
-                    gravity(a, false);
+                for(Circle c : collider(player, list)) {
+                    if (player.getRadius() > c.getRadius()) {
+                        list.remove(c);
+                    }
                 }
             }
 
-            private List<Circle> collision(Circle circle, List<Circle> list) {
-                List<Circle> collider = new ArrayList<>();
+            private List<Circle> collider(Circle circle, List<Circle> list) {
+                List<Circle> col = new ArrayList<>();
                 for (Circle c : list) {
                     if (circle.getRadius()+c.getRadius() >= circle.getDistance(c)) {
-                        collider.add(c);
+                        col.add(c);
                     }
                 }
-                return collider;
+                return col;
             }
 
             private void gravity(Circle c, boolean hasGravity) {
@@ -60,7 +64,8 @@ public class App {
 
             private void draw(Circle c, Graphics g) {
                 g.setColor(c.getColor());
-                g.fillOval(c.getX(), c.getY(), c.getRadius() * 2, c.getRadius() * 2);
+                g.fillOval(c.getX()-c.getRadius(), c.getY()-c.getRadius(),
+                            c.getRadius() * 2, c.getRadius() * 2);
             }
 
             private void sleep(int ms) {

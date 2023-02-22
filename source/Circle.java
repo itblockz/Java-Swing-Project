@@ -74,4 +74,10 @@ public class Circle {
     public void setColor(Color color) {
         this.color = color;
     }
+
+    @Override
+    public String toString() {
+        return "Circle [x=" + x + ", y=" + y + ", radius=" + radius + ", speed=" + speed + ", color=" + color + "]";
+    }
+    
 }
