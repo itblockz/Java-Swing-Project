@@ -22,10 +22,10 @@ public class App {
     private void detailComponents(){
         Circle player = new Circle(100, 500, 50, 200, Color.YELLOW);
         List<Circle> list = new ArrayList<>();
-        Circle a = new Circle(120, 50, 10, 500, Color.WHITE);
+        Circle a = new Circle(120, 50, 60, 500, Color.WHITE);
         Circle b = new Circle(170, 50, 20, 500, Color.WHITE);
         list.add(a);
-        list.add(b);
+        // list.add(b);
         f.add(new JPanel() {
             @Override
             public void paint(Graphics g) {
@@ -39,7 +39,7 @@ public class App {
                 for(Circle c : collider(player, list)) {
                     if (player.getRadius() > c.getRadius()) {
                         list.remove(c);
-                    }
+                    } else gravity(c, false);
                 }
             }
 
