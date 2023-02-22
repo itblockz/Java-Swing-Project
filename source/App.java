@@ -23,7 +23,7 @@ public class App {
         int speed = 500;
         Circle player = new Circle(100, 500, 60, Color.YELLOW);
         List<Circle> list = new ArrayList<>();
-        Circle a = new Circle(100, 50, 40, Color.WHITE);
+        Circle a = new Circle(100, 50, 70, Color.WHITE);
         Circle b = new Circle(180, 50, 20, Color.WHITE);
         list.add(a);
         list.add(b);
@@ -39,6 +39,7 @@ public class App {
                 }
                 sleep(1000/speed);
                 for(Circle c : collider(player, list)) {
+                    System.out.println(c);
                     if (player.getRadius() > c.getRadius()) {
                         list.remove(c);
                     } else gravity(c, false);
@@ -57,7 +58,7 @@ public class App {
 
             private void gravity(Circle c, boolean hasGravity) {
                 if (!hasGravity) return;
-                if (c.getY() < getHeight() - (c.getRadius() * 2) - 5) {
+                if (c.getY() < getHeight() - c.getRadius()) {
                     c.translate(0, 1);
                     repaint();
                 }
