@@ -16,6 +16,10 @@ public class Circle {
         this.speed = speed;
         this.color = color;
     }
+
+    public double getDistance(Circle c) {
+        return Math.sqrt((x-c.getX())*(x-c.getX()) + (y-c.getY())*(y-c.getY()));
+    }
     public void translate(int x, int y) {
         setX(this.x + x);
         setY(this.y + y);

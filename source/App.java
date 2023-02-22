@@ -5,6 +5,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import java.awt.Graphics;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.Color;
 
 public class App {
@@ -18,16 +20,33 @@ public class App {
     }
 
     private void detailComponents(){
+        Circle player = new Circle(40, 600, 10, 200, Color.YELLOW);
+        List<Circle> list = new ArrayList<>();
+        Circle a = new Circle(60, 50, 50, 500, Color.WHITE);
+        list.add(a);
         f.add(new JPanel() {
-            Circle a = new Circle(20, 50, 10, 200, Color.WHITE);
-
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
                 setBackground(Color.BLACK);
+                draw(player, g);
                 draw(a, g);
-                if (a.getY() < 500) gravity(a, true);
-                else gravity(a, false);
+                if (collision(player, list).size() == 0) {
+                    gravity(a, true);
+                }
+                else {
+                    gravity(a, false);
+                }
+            }
+
+            private List<Circle> collision(Circle circle, List<Circle> list) {
+                List<Circle> collider = new ArrayList<>();
+                for (Circle c : list) {
+                    if (circle.getRadius()+c.getRadius() >= circle.getDistance(c)) {
+                        collider.add(c);
+                    }
+                }
+                return collider;
             }
 
             private void gravity(Circle c, boolean hasGravity) {
