@@ -20,12 +20,13 @@ public class App {
     }
 
     private void detailComponents(){
-        Circle player = new Circle(100, 500, 50, 200, Color.YELLOW);
+        int speed = 500;
+        Circle player = new Circle(100, 500, 60, Color.YELLOW);
         List<Circle> list = new ArrayList<>();
-        Circle a = new Circle(120, 50, 60, 100, Color.WHITE);
-        // Circle b = new Circle(170, 50, 20, 500, Color.WHITE);
+        Circle a = new Circle(100, 50, 40, Color.WHITE);
+        Circle b = new Circle(180, 50, 20, Color.WHITE);
         list.add(a);
-        // list.add(b);
+        list.add(b);
         f.add(new JPanel() {
             @Override
             public void paint(Graphics g) {
@@ -36,6 +37,7 @@ public class App {
                     draw(c, g);
                     gravity(c, true);
                 }
+                sleep(1000/speed);
                 for(Circle c : collider(player, list)) {
                     if (player.getRadius() > c.getRadius()) {
                         list.remove(c);
@@ -56,7 +58,6 @@ public class App {
             private void gravity(Circle c, boolean hasGravity) {
                 if (!hasGravity) return;
                 if (c.getY() < getHeight() - (c.getRadius() * 2) - 5) {
-                    sleep(1000/c.getSpeed());
                     c.translate(0, 1);
                     repaint();
                 }
