@@ -24,7 +24,7 @@ public class App {
         Circle player = new Circle(100, 500, 60, Color.YELLOW);
         List<Circle> list = new ArrayList<>();
         Circle a = new Circle(80, 50, 70, Color.WHITE);
-        Circle b = new Circle(180, 400, 20, Color.WHITE);
+        Circle b = new Circle(180, 300, 20, Color.WHITE);
         list.add(a);
         list.add(b);
         f.add(new JPanel() {
@@ -45,7 +45,6 @@ public class App {
                 draw(player, g);
                     for (Circle c : list) {
                         draw(c, g);
-                        gravity(c, false);
                     }
                     System.out.println("Game Over");
                     // Game Over Graphic
@@ -55,7 +54,7 @@ public class App {
                 draw(player, g);
                     for (Circle c : list) {
                         draw(c, g);
-                        gravity(c, true);
+                        gravity(c);
                     }
                     sleep(1000/speed);
                     for(Circle c : collider(player, list)) {
@@ -77,8 +76,7 @@ public class App {
                 return col;
             }
 
-            private void gravity(Circle c, boolean hasGravity) {
-                if (!hasGravity) return;
+            private void gravity(Circle c) {
                 if (c.getY() < getHeight() - c.getRadius()) {
                     c.translate(0, 1);
                     repaint();
