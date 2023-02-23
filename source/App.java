@@ -23,26 +23,37 @@ public class App {
         int speed = 500;
         Circle player = new Circle(100, 500, 60, Color.YELLOW);
         List<Circle> list = new ArrayList<>();
-        Circle a = new Circle(100, 50, 70, Color.WHITE);
+        Circle a = new Circle(80, 50, 70, Color.WHITE);
         Circle b = new Circle(180, 50, 20, Color.WHITE);
         list.add(a);
         list.add(b);
         f.add(new JPanel() {
+            boolean gameover = false;
+
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
                 setBackground(Color.BLACK);
                 draw(player, g);
-                for (Circle c : list) {
-                    draw(c, g);
-                    gravity(c, true);
-                }
-                sleep(1000/speed);
-                for(Circle c : collider(player, list)) {
-                    System.out.println(c);
-                    if (player.getRadius() > c.getRadius()) {
-                        list.remove(c);
-                    } else gravity(c, false);
+                if (!gameover) {
+                    for (Circle c : list) {
+                        draw(c, g);
+                        gravity(c, true);
+                    }
+                    sleep(1000/speed);
+                    for(Circle c : collider(player, list)) {
+                        if (player.getRadius() > c.getRadius()) {
+                            list.remove(c);
+                        } else {
+                            gameover = true;
+                        }
+                    }
+                } else {
+                    for (Circle c : list) {
+                        draw(c, g);
+                        gravity(c, false);
+                    }
+                    System.out.println("Game Over");
                 }
             }
 
