@@ -24,18 +24,35 @@ public class App {
         Circle player = new Circle(100, 500, 60, Color.YELLOW);
         List<Circle> list = new ArrayList<>();
         Circle a = new Circle(80, 50, 70, Color.WHITE);
-        Circle b = new Circle(180, 50, 20, Color.WHITE);
+        Circle b = new Circle(180, 400, 20, Color.WHITE);
         list.add(a);
         list.add(b);
         f.add(new JPanel() {
-            boolean gameover = false;
+            boolean isGameOver = false;
 
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
                 setBackground(Color.BLACK);
+                if (!isGameOver) {
+                    play(g);
+                } else {
+                    gameover(g);
+                }
+            }
+
+            private void gameover(Graphics g) {
                 draw(player, g);
-                if (!gameover) {
+                    for (Circle c : list) {
+                        draw(c, g);
+                        gravity(c, false);
+                    }
+                    System.out.println("Game Over");
+                    // Game Over Graphic
+            }
+
+            private void play(Graphics g) {
+                draw(player, g);
                     for (Circle c : list) {
                         draw(c, g);
                         gravity(c, true);
@@ -45,16 +62,9 @@ public class App {
                         if (player.getRadius() > c.getRadius()) {
                             list.remove(c);
                         } else {
-                            gameover = true;
+                            isGameOver = true;
                         }
                     }
-                } else {
-                    for (Circle c : list) {
-                        draw(c, g);
-                        gravity(c, false);
-                    }
-                    System.out.println("Game Over");
-                }
             }
 
             private List<Circle> collider(Circle circle, List<Circle> list) {
