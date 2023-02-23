@@ -9,6 +9,7 @@ public class Circle {
     private int speed;
     private Color color;
 
+    //ไว้เก็บค่า Circle
     public Circle(int x, int y, int radius, int speed, Color color) {
         this.x = x;
         this.y = y;
@@ -17,16 +18,21 @@ public class Circle {
         this.color = color;
     }
 
+    //หาระยะห่างระหว่างวงกลม
     public double getDistance(Circle c) {
         return Math.sqrt((x-c.getX())*(x-c.getX()) + (y-c.getY())*(y-c.getY()));
     }
+
+    //เลื่อน (เคลื่อนที่)
     public void translate(int x, int y) {
         setX(this.x + x);
         setY(this.y + y);
     }
+
     public int getX() {
         return x;
     }
+
     public void setX(int x) {
         if (x > 0) {
             this.x = x;
@@ -34,9 +40,11 @@ public class Circle {
             x = 0;
         }
     }
+
     public int getY() {
         return y;
     }
+
     public void setY(int y) {
         if (y > 0) {
             this.y = y;
@@ -44,13 +52,16 @@ public class Circle {
             y = 0;
         }
     }
+
     public void setPosition(int x, int y) {
         setX(x);
         setY(y);
     }
+
     public int getRadius() {
         return radius;
     }
+
     public void setRadius(int radius) {
         if (radius > 1) {
             this.radius = radius;
@@ -58,9 +69,11 @@ public class Circle {
             radius = 1;
         }
     }
+
     public int getSpeed() {
         return speed;
     }
+
     public void setSpeed(int speed) {
         if (speed > 1) {
             this.speed = speed;
@@ -68,9 +81,11 @@ public class Circle {
             speed = 1;
         }
     }
+
     public Color getColor() {
         return color;
     }
+
     public void setColor(Color color) {
         this.color = color;
     }
@@ -79,5 +94,12 @@ public class Circle {
     public String toString() {
         return "Circle [x=" + x + ", y=" + y + ", radius=" + radius + ", speed=" + speed + ", color=" + color + "]";
     }
-    
+
+    public void sleep(int ms) {
+        try {
+        Thread.sleep(ms);
+        } catch (InterruptedException e) {
+        System.out.println(e);
+        }
+        }
 }
