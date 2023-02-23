@@ -20,6 +20,14 @@ public class App {
         f.setVisible(true);
     }
 
+    private void detailComponents(){
+        int speed = 500;
+        Circle player = new Circle(100, 500, 60, Color.YELLOW);
+        List<Circle> list = new ArrayList<>();
+        Circle a = new Circle(80, 50, 70, Color.WHITE);
+        Circle b = new Circle(180, 300, 20, Color.WHITE);
+        list.add(a);
+        list.add(b);
     private void detailComponents() {
         Circle player = new Circle(100, 500, 50, 200, Color.YELLOW); // รายละเอียด player
         List<Circle> list = new ArrayList<>();
@@ -76,26 +84,42 @@ public class App {
         // list.add(c);
         // list.add(d);
         f.add(new JPanel() {
+            boolean isGameOver = false;
+
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
                 setBackground(Color.BLACK);
+                if (!isGameOver) {
+                    play(g);
+                } else {
+                    gameover(g);
+                }
+            }
+
+            private void gameover(Graphics g) {
                 draw(player, g);
-                for (Circle c : list) {
-                    draw(c, g);
-                    gravity(c, true);
-                }
-
-                // a.sleep(1500/a.getSpeed());
-                // b.sleep(1500/b.getSpeed());
-                // c.sleep(1500/c.getSpeed());
-                // d.sleep(1500/d.getSpeed());
-
-                for (Circle c : collider(player, list)) {
-                    if (player.getRadius() > c.getRadius()) {
-                        list.remove(c);
+                    for (Circle c : list) {
+                        draw(c, g);
                     }
-                }
+                    System.out.println("Game Over");
+                    // Game Over Graphic
+            }
+
+            private void play(Graphics g) {
+                draw(player, g);
+                    for (Circle c : list) {
+                        draw(c, g);
+                        gravity(c);
+                    }
+                    sleep(1000/speed);
+                    for(Circle c : collider(player, list)) {
+                        if (player.getRadius() > c.getRadius()) {
+                            list.remove(c);
+                        } else {
+                            isGameOver = true;
+                        }
+                    }
             }
 
             private List<Circle> collider(Circle circle, List<Circle> list) {
@@ -108,11 +132,8 @@ public class App {
                 return col;
             }
 
-            private void gravity(Circle c, boolean hasGravity) {
-                if (!hasGravity)
-                    return;
-                if (c.getY() < getHeight() - (c.getRadius() * 2) - 5) {
-                    sleep(1000/c.getSpeed()); //1000 = 1 second 
+            private void gravity(Circle c) {
+                if (c.getY() < getHeight() - c.getRadius()) {
                     c.translate(0, 1);
                     repaint();
                 }

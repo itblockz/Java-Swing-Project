@@ -6,15 +6,12 @@ public class Circle {
     private int x;
     private int y;
     private int radius;
-    private int speed;
     private Color color;
 
-    //ไว้เก็บค่า Circle
-    public Circle(int x, int y, int radius, int speed, Color color) {
+    public Circle(int x, int y, int radius, Color color) {
         this.x = x;
         this.y = y;
         this.radius = radius;
-        this.speed = speed;
         this.color = color;
     }
 
@@ -69,19 +66,6 @@ public class Circle {
             radius = 1;
         }
     }
-
-    public int getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(int speed) {
-        if (speed > 1) {
-            this.speed = speed;
-        } else {
-            speed = 1;
-        }
-    }
-
     public Color getColor() {
         return color;
     }
@@ -92,7 +76,7 @@ public class Circle {
 
     @Override
     public String toString() {
-        return "Circle [x=" + x + ", y=" + y + ", radius=" + radius + ", speed=" + speed + ", color=" + color + "]";
+        return "Circle [x=" + x + ", y=" + y + ", radius=" + radius + ", color=" + color + "]";
     }
 
     public void sleep(int ms) {
