@@ -20,16 +20,9 @@ public class App {
         f.setVisible(true);
     }
 
-    private void detailComponents(){
-        int speed = 500;
-        Circle player = new Circle(100, 500, 60, Color.YELLOW);
-        List<Circle> list = new ArrayList<>();
-        Circle a = new Circle(80, 50, 70, Color.WHITE);
-        Circle b = new Circle(180, 300, 20, Color.WHITE);
-        list.add(a);
-        list.add(b);
     private void detailComponents() {
-        Circle player = new Circle(100, 500, 50, 200, Color.YELLOW); // รายละเอียด player
+        int speed = 500;
+        Circle player = new Circle(100, 500, 50, Color.YELLOW); // รายละเอียด player
         List<Circle> list = new ArrayList<>();
 
         int ball = 5;
@@ -74,7 +67,7 @@ public class App {
                     radius = 50;
             }
 
-            Circle a = new Circle(x, 100, radius, 500, Color.WHITE);
+            Circle a = new Circle(x, 100, radius, Color.WHITE);
             System.out.println(x);
             list.add(a);
 
