@@ -43,27 +43,30 @@ public class App {
 
             private void gameover(Graphics g) {
                 draw(player, g);
-                    for (Circle c : list) {
-                        draw(c, g);
-                    }
-                    System.out.println("Game Over");
-                    // Game Over Graphic
+                for (Circle c : list) {
+                    draw(c, g);
+                }
+                System.out.println("Game Over");
+                // Game Over Graphic
+                g.setFont(getFont().deriveFont(70.0f));
+                g.setColor(Color.PINK);
+                g.drawString("Game Over", 120, getHeight()/2);
             }
 
             private void play(Graphics g) {
                 draw(player, g);
-                    for (Circle c : list) {
-                        draw(c, g);
-                        gravity(c);
+                for (Circle c : list) {
+                    draw(c, g);
+                    gravity(c);
+                }
+                sleep(1000/speed);
+                for(Circle c : collider(player, list)) {
+                    if (player.getRadius() > c.getRadius()) {
+                        list.remove(c);
+                    } else {
+                        isGameOver = true;
                     }
-                    sleep(1000/speed);
-                    for(Circle c : collider(player, list)) {
-                        if (player.getRadius() > c.getRadius()) {
-                            list.remove(c);
-                        } else {
-                            isGameOver = true;
-                        }
-                    }
+                }
             }
 
             private List<Circle> collider(Circle circle, List<Circle> list) {
