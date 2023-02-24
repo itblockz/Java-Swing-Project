@@ -1,13 +1,14 @@
 package source;
 
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
+import javax.swing.Timer;
 import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.Color;
 
 public class App {
     private JFrame f;
@@ -19,14 +20,18 @@ public class App {
         f.setVisible(true);
     }
 
-    private void detailComponents(){
+    private void detailComponents() {
         int speed = 500;
-        Circle player = new Circle(100, 500, 60, Color.YELLOW);
+        Circle player = new Circle(100, 500, 60, Color.YELLOW); // can delete it's example
         List<Circle> list = new ArrayList<>();
-        Circle a = new Circle(80, 50, 70, Color.WHITE);
-        Circle b = new Circle(180, 300, 20, Color.WHITE);
-        list.add(a);
-        list.add(b);
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Random Here
+                list.add(new Circle(80, 0, 50, Color.WHITE)); // can delete it's example
+            } 
+         });
+        timer.start();
         f.add(new JPanel() {
             boolean isGameOver = false;
 
@@ -42,11 +47,11 @@ public class App {
             }
 
             private void gameover(Graphics g) {
+                timer.stop();
                 draw(player, g);
                 for (Circle c : list) {
                     draw(c, g);
                 }
-                System.out.println("Game Over");
                 // Game Over Graphic
                 g.setFont(getFont().deriveFont(70.0f));
                 g.setColor(Color.PINK);
@@ -67,6 +72,7 @@ public class App {
                         isGameOver = true;
                     }
                 }
+                repaint();
             }
 
             private List<Circle> collider(Circle circle, List<Circle> list) {
@@ -91,15 +97,15 @@ public class App {
                 g.fillOval(c.getX()-c.getRadius(), c.getY()-c.getRadius(),
                             c.getRadius() * 2, c.getRadius() * 2);
             }
-
-            private void sleep(int ms) {
-                try {
-                    Thread.sleep(ms);
-                } catch (InterruptedException e) {
-                    System.out.println(e);
-                }
-            }
         });
+    }
+
+    private void sleep(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            System.out.println(e);
+        }
     }
 }
 
