@@ -2,17 +2,17 @@ package source;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-
+import javax.swing.Timer;
 import java.awt.Graphics;
+import java.awt.Color;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.awt.Color;
 
 public class App {
-
     private JFrame f;
-
-    public App() {
+    public App(){
         f = new JFrame("Game");
         f.setSize(600, 700);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -22,60 +22,16 @@ public class App {
 
     private void detailComponents() {
         int speed = 500;
-        Circle player = new Circle(100, 500, 50, Color.YELLOW); // รายละเอียด player
+        Circle player = new Circle(100, 500, 60, Color.YELLOW); // can delete it's example
         List<Circle> list = new ArrayList<>();
-
-        int ball = 5;
-        int x = 0;
-        int radius = 0;
-
-        for (int p = 0; p < ball; p++){
-            int random = (int)(Math.random()*5)+1; // สุ่มเพื่อหาเคส
-            int random2 = (int)(Math.random()*5)+1;
-
-            switch(random) {
-                case 1:
-                    x = 100;
-                    break;
-                case 2:
-                    x = 200;
-                    break;
-                case 3:
-                    x = 300;
-                    break;
-                case 4:
-                    x = 400;
-                    break;
-                case 5:
-                    x = 500;
-            }
-
-            switch(random2) {
-                case 1:
-                    radius = 10;
-                    break;
-                case 2:
-                    radius = 20;
-                    break;
-                case 3:
-                    radius = 30;
-                    break;
-                case 4:
-                    radius = 40;
-                    break;
-                case 5:
-                    radius = 50;
-            }
-
-            Circle a = new Circle(x, 100, radius, Color.WHITE);
-            System.out.println(x);
-            list.add(a);
-
-        }
-
-        // list.add(b);
-        // list.add(c);
-        // list.add(d);
+        Timer timer = new Timer(1000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Random Here
+                list.add(new Circle(80, 0, 50, Color.WHITE)); // can delete it's example
+            } 
+         });
+        timer.start();
         f.add(new JPanel() {
             boolean isGameOver = false;
 
@@ -91,34 +47,38 @@ public class App {
             }
 
             private void gameover(Graphics g) {
+                timer.stop();
                 draw(player, g);
-                    for (Circle c : list) {
-                        draw(c, g);
-                    }
-                    System.out.println("Game Over");
-                    // Game Over Graphic
+                for (Circle c : list) {
+                    draw(c, g);
+                }
+                // Game Over Graphic
+                g.setFont(getFont().deriveFont(70.0f));
+                g.setColor(Color.PINK);
+                g.drawString("Game Over", 120, getHeight()/2);
             }
 
             private void play(Graphics g) {
                 draw(player, g);
-                    for (Circle c : list) {
-                        draw(c, g);
-                        gravity(c);
+                for (Circle c : list) {
+                    draw(c, g);
+                    gravity(c);
+                }
+                sleep(1000/speed);
+                for(Circle c : collider(player, list)) {
+                    if (player.getRadius() > c.getRadius()) {
+                        list.remove(c);
+                    } else {
+                        isGameOver = true;
                     }
-                    sleep(1000/speed);
-                    for(Circle c : collider(player, list)) {
-                        if (player.getRadius() > c.getRadius()) {
-                            list.remove(c);
-                        } else {
-                            isGameOver = true;
-                        }
-                    }
+                }
+                repaint();
             }
 
             private List<Circle> collider(Circle circle, List<Circle> list) {
                 List<Circle> col = new ArrayList<>();
                 for (Circle c : list) {
-                    if (circle.getRadius() + c.getRadius() >= circle.getDistance(c)) {
+                    if (circle.getRadius()+c.getRadius() >= circle.getDistance(c)) {
                         col.add(c);
                     }
                 }
@@ -134,18 +94,18 @@ public class App {
 
             private void draw(Circle c, Graphics g) {
                 g.setColor(c.getColor());
-                g.fillOval(c.getX() - c.getRadius(), c.getY() - c.getRadius(),
-                        c.getRadius() * 2, c.getRadius() * 2);
+                g.fillOval(c.getX()-c.getRadius(), c.getY()-c.getRadius(),
+                            c.getRadius() * 2, c.getRadius() * 2);
             }
-
-            private void sleep(int ms) {
-            try {
-            Thread.sleep(ms);
-            } catch (InterruptedException e) {
-            System.out.println(e);
-            }
-            }
-
         });
     }
+
+    private void sleep(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            System.out.println(e);
+        }
+    }
 }
+
