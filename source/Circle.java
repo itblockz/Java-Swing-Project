@@ -15,12 +15,10 @@ public class Circle {
         this.color = color;
     }
 
-    //หาระยะห่างระหว่างวงกลม
     public double getDistance(Circle c) {
         return Math.sqrt((x-c.getX())*(x-c.getX()) + (y-c.getY())*(y-c.getY()));
     }
 
-    //เลื่อน (เคลื่อนที่)
     public void translate(int x, int y) {
         setX(this.x + x);
         setY(this.y + y);
