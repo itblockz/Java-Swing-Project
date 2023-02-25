@@ -31,15 +31,56 @@ public class App {
 
     private void detailComponents() {
         speed = 500;
-        player = new Circle(100, 500, 60, Color.YELLOW); // can delete it's example
+        player = new Circle(100, 500, 40, Color.YELLOW); // can delete it's example
         list = new ArrayList<>();
         toRemove = new ArrayList<>();
         timer = new Timer(500, new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent e) {
-                // Random Here
-                list.add(new Circle(300, 0, 50, Color.WHITE)); // can delete it's example
-            } 
+                int ball = 1;
+                int x = 0;
+                int radius = 0;
+
+                for (int p = 0; p < ball; p++) {
+                    int random = (int) (Math.random() * 5) + 1; // สุ่มเพื่อหาเคส
+                    int random2 = (int) (Math.random() * 5) + 1;
+
+                    switch (random) {
+                        case 1:
+                            x = 100;
+                            break;
+                        case 2:
+                            x = 200;
+                            break;
+                        case 3:
+                            x = 300;
+                            break;
+                        case 4:
+                            x = 400;
+                            break;
+                        case 5:
+                            x = 500;
+                    }
+
+                    switch (random2) {
+                        case 1:
+                            radius = 10;
+                            break;
+                        case 2:
+                            radius = 20;
+                            break;
+                        case 3:
+                            radius = 30;
+                            break;
+                        case 4:
+                            radius = 40;
+                            break;
+                        case 5:
+                            radius = 50;
+                    }
+                    // System.out.println("This circle spawan at " + x + " It has " + radius + " radius");
+                    list.add(new Circle(x, 0, radius, Color.WHITE));
+                }
+            }
         });
         timer.start();
         f.add(new JPanel() {
@@ -53,7 +94,6 @@ public class App {
                 super.paint(g);
                 setBackground(Color.BLACK);
                 // g.drawImage(img, 300, 300, 256, 256, null); // img
-                System.out.println(list.size());
                 if (!isGameOver) {
                     play(g);
                 } else {
@@ -70,7 +110,7 @@ public class App {
                 // Game Over Graphic
                 g.setFont(getFont().deriveFont(70.0f));
                 g.setColor(Color.PINK);
-                g.drawString("Game Over", 120, getHeight()/2);
+                g.drawString("Game Over", 120, getHeight() / 2);
             }
 
             private void play(Graphics g) {
@@ -97,7 +137,7 @@ public class App {
             private List<Circle> collider(Circle circle, List<Circle> list) {
                 List<Circle> col = new ArrayList<>();
                 for (Circle c : list) {
-                    if (circle.getRadius()+c.getRadius() >= circle.getDistance(c)) {
+                    if (circle.getRadius() + c.getRadius() >= circle.getDistance(c)) {
                         col.add(c);
                     }
                 }
@@ -111,8 +151,8 @@ public class App {
 
             private void draw(Circle c, Graphics g) {
                 g.setColor(c.getColor());
-                g.fillOval(c.getX()-c.getRadius(), c.getY()-c.getRadius(),
-                            c.getRadius() * 2, c.getRadius() * 2);
+                g.fillOval(c.getX() - c.getRadius(), c.getY() - c.getRadius(),
+                        c.getRadius() * 2, c.getRadius() * 2);
             }
 
             private void sleep(int ms) {
