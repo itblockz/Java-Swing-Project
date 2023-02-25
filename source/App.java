@@ -12,6 +12,7 @@ import java.io.File;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class App {
     private JFrame f;
@@ -19,7 +20,9 @@ public class App {
     private List<Circle> toRemove;
     private Timer timer;
     private Circle player;
+    private Random rand;
     private int speed;
+    private int seed;
 
     public App(){
         f = new JFrame("Game");
@@ -30,7 +33,9 @@ public class App {
     }
 
     private void detailComponents() {
-        speed = 500;
+        speed = 250;
+        seed = new Random().nextInt();
+        rand = new Random(seed);
         player = new Circle(100, 500, 40, Color.YELLOW); // can delete it's example
         list = new ArrayList<>();
         toRemove = new ArrayList<>();
@@ -41,8 +46,8 @@ public class App {
                 int radius = 0;
 
                 for (int p = 0; p < ball; p++) {
-                    int random = (int) (Math.random() * 5) + 1; // สุ่มเพื่อหาเคส
-                    int random2 = (int) (Math.random() * 5) + 1;
+                    int random = rand.nextInt(5)+1; // สุ่มเพื่อหาเคส
+                    int random2 = rand.nextInt(5)+1;
 
                     switch (random) {
                         case 1:
@@ -77,7 +82,6 @@ public class App {
                         case 5:
                             radius = 50;
                     }
-                    // System.out.println("This circle spawan at " + x + " It has " + radius + " radius");
                     list.add(new Circle(x, 0, radius, Color.WHITE));
                 }
             }
