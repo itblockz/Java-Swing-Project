@@ -5,13 +5,22 @@ import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 public class App {
     private JFrame f;
+    private List<Circle> list;
+    private List<Circle> toRemove;
+    private Timer timer;
+    private Circle player;
+    private int speed;
+
     public App(){
         f = new JFrame("Game");
         f.setSize(600, 700);
@@ -21,24 +30,30 @@ public class App {
     }
 
     private void detailComponents() {
-        int speed = 500;
-        Circle player = new Circle(100, 500, 60, Color.YELLOW); // can delete it's example
-        List<Circle> list = new ArrayList<>();
-        Timer timer = new Timer(1000, new ActionListener() {
+        speed = 500;
+        player = new Circle(100, 500, 60, Color.YELLOW); // can delete it's example
+        list = new ArrayList<>();
+        toRemove = new ArrayList<>();
+        timer = new Timer(500, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Random Here
-                list.add(new Circle(80, 0, 50, Color.WHITE)); // can delete it's example
+                list.add(new Circle(300, 0, 50, Color.WHITE)); // can delete it's example
             } 
-         });
+        });
         timer.start();
         f.add(new JPanel() {
             boolean isGameOver = false;
-
+            Image img = Toolkit.getDefaultToolkit().createImage(
+                System.getProperty("user.dir") + File.separator + "source" + File.separator + "CS.png"
+            );
+                 
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
                 setBackground(Color.BLACK);
+                // g.drawImage(img, 300, 300, 256, 256, null); // img
+                System.out.println(list.size());
                 if (!isGameOver) {
                     play(g);
                 } else {
@@ -63,7 +78,11 @@ public class App {
                 for (Circle c : list) {
                     draw(c, g);
                     gravity(c);
+                    if (c.getY() - c.getRadius() > getHeight()){
+                        toRemove.add(c);
+                    }
                 }
+                list.removeAll(toRemove);
                 sleep(1000/speed);
                 for(Circle c : collider(player, list)) {
                     if (player.getRadius() > c.getRadius()) {
@@ -86,10 +105,8 @@ public class App {
             }
 
             private void gravity(Circle c) {
-                if (c.getY() < getHeight() - c.getRadius()) {
-                    c.translate(0, 1);
-                    repaint();
-                }
+                c.translate(0, 1);
+                repaint();
             }
 
             private void draw(Circle c, Graphics g) {
@@ -97,15 +114,14 @@ public class App {
                 g.fillOval(c.getX()-c.getRadius(), c.getY()-c.getRadius(),
                             c.getRadius() * 2, c.getRadius() * 2);
             }
+
+            private void sleep(int ms) {
+                try {
+                    Thread.sleep(ms);
+                } catch (InterruptedException e) {
+                    System.out.println(e);
+                }
+            }
         });
     }
-
-    private void sleep(int ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            System.out.println(e);
-        }
-    }
 }
-
