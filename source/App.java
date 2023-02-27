@@ -16,20 +16,22 @@ import java.util.Random;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class App{
+public class App {
     private JFrame f;
+    private JPanel p;
     private List<Circle> list;
     private List<Circle> toRemove;
+    private Circle player;
     private Timer timer;
     private Timer scoreTimer;
-    private Circle player;
+    private Timer playerTimer;
     private Random rand;
     private int speed;
     private int seed;
-    private JPanel p;
     private int score;
+    private Image img;
 
-    public App(){
+    public App() {
         f = new JFrame("Game");
         f.setSize(600, 700);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -51,26 +53,25 @@ public class App{
                 int radius = 0;
 
                 for (int p = 0; p < ball; p++) {
-                    int random = rand.nextInt(5)+1; // สุ่มเพื่อหาเคส
+                    // int random = rand.nextInt(5)+1; // สุ่มเพื่อหาเคส
                     int random2 = rand.nextInt(5)+1;
 
-                    switch (random) {
-                        case 1:
-                            x = 100;
-                            break;
-                        case 2:
-                            x = 200;
-                            break;
-                        case 3:
-                            x = 300;
-                            break;
-                        case 4:
-                            x = 400;
-                            break;
-                        case 5:
-                            x = 500;
-                    }
-
+                    // switch (random) {
+                    //     case 1:
+                    //         x = 100;
+                    //         break;
+                    //     case 2:
+                    //         x = 200;
+                    //         break;
+                    //     case 3:
+                    //         x = 300;
+                    //         break;
+                    //     case 4:
+                    //         x = 400;
+                    //         break;
+                    //     case 5:
+                    //         x = 500;
+                    // }
                     switch (random2) {
                         case 1:
                             radius = 10;
@@ -87,23 +88,35 @@ public class App{
                         case 5:
                             radius = 50;
                     }
+                    x = rand.nextInt(580) + 10;
                     list.add(new Circle(x, 0, radius, Color.WHITE));
                 }
             }
-        });
+        }); // timer
         scoreTimer = new Timer(200, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 score++;
             }
-        });
+        }); // scoreTimer
+        playerTimer = new Timer(1, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (player.getSpeed() < 0 && player.getX() - player.getRadius() > 0) {
+                    player.translate(player.getSpeed(), 0);
+                } else if (player.getSpeed() > 0 && player.getX() + player.getRadius() < p.getWidth()) {
+                    player.translate(player.getSpeed(), 0);
+                }
+            }
+        }); // playerTimer
+        img = Toolkit.getDefaultToolkit().createImage(
+            System.getProperty("user.dir") + File.separator + "source" + File.separator + "CS.png"
+        );
         timer.start();
         scoreTimer.start();
+        playerTimer.start();
         p = new JPanel() {
             boolean isGameOver = false;
-            Image img = Toolkit.getDefaultToolkit().createImage(
-                System.getProperty("user.dir") + File.separator + "source" + File.separator + "CS.png"
-            );
                  
             @Override
             public void paint(Graphics g) {
@@ -119,6 +132,8 @@ public class App{
 
             private void gameover(Graphics g) {
                 timer.stop();
+                scoreTimer.stop();
+                playerTimer.stop();
                 draw(player, g);
                 for (Circle c : list) {
                     draw(c, g);
@@ -127,7 +142,7 @@ public class App{
                 g.setFont(getFont().deriveFont(70.0f));
                 g.setColor(Color.PINK);
                 g.drawString("Game Over", 120, getHeight() / 2);
-
+                // Score Graphic
                 g.setFont(getFont().deriveFont(20.0f));
                 g.setColor(Color.YELLOW);
                 g.drawString("Score " + score, 20, 50);
@@ -189,24 +204,44 @@ public class App{
         f.add(p);
         AllKeyListener kl = new AllKeyListener();
         f.addKeyListener(kl);
-    }
+    } // detailComponent
 
     private class AllKeyListener implements KeyListener {
         @Override
         public void keyTyped(KeyEvent e) {
-            System.out.println("typed");
+            
         }
 
         @Override
         public void keyPressed(KeyEvent e) {
-            player.keyPressed(e);
+            int key = e.getKeyCode();
+            if (key == KeyEvent.VK_RIGHT) {
+                player.setSpeed(2);
+            }
+            if (key == KeyEvent.VK_LEFT) {
+                player.setSpeed(-2);
+            }
+            if (key == KeyEvent.VK_UP) {
+                if (player.getRadius() < 40) {
+                    player.setRadius(player.getRadius()+10);
+                }
+            }
+            if (key == KeyEvent.VK_DOWN) {
+                if (player.getRadius() > 10) {
+                    player.setRadius(player.getRadius()-10);
+                }
+            }
         }
 
         @Override
         public void keyReleased(KeyEvent e) {
-            player.keyReleased(e);
+            int key = e.getKeyCode();
+            if(key == KeyEvent.VK_RIGHT){
+                player.setSpeed(0);
+            }
+            if(key == KeyEvent.VK_LEFT){
+                player.setSpeed(0);
+            }
         }
-        
-    }
-    
-}
+    } // AllKeyListener
+} // App
