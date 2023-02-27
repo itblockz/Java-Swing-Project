@@ -13,16 +13,21 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class App {
+public class App{
     private JFrame f;
     private List<Circle> list;
     private List<Circle> toRemove;
     private Timer timer;
+    private Timer scoreTimer;
     private Circle player;
     private Random rand;
     private int speed;
     private int seed;
+    private JPanel p;
+    private int score;
 
     public App(){
         f = new JFrame("Game");
@@ -36,7 +41,7 @@ public class App {
         speed = 250;
         seed = new Random().nextInt();
         rand = new Random(seed);
-        player = new Circle(100, 500, 40, Color.YELLOW); // can delete it's example
+        player = new Circle(300, 600, 10, Color.YELLOW); // can delete it's example
         list = new ArrayList<>();
         toRemove = new ArrayList<>();
         timer = new Timer(500, new ActionListener() {
@@ -86,8 +91,15 @@ public class App {
                 }
             }
         });
+        scoreTimer = new Timer(200, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                score++;
+            }
+        });
         timer.start();
-        f.add(new JPanel() {
+        scoreTimer.start();
+        p = new JPanel() {
             boolean isGameOver = false;
             Image img = Toolkit.getDefaultToolkit().createImage(
                 System.getProperty("user.dir") + File.separator + "source" + File.separator + "CS.png"
@@ -115,6 +127,10 @@ public class App {
                 g.setFont(getFont().deriveFont(70.0f));
                 g.setColor(Color.PINK);
                 g.drawString("Game Over", 120, getHeight() / 2);
+
+                g.setFont(getFont().deriveFont(20.0f));
+                g.setColor(Color.YELLOW);
+                g.drawString("Score " + score, 20, 50);
             }
 
             private void play(Graphics g) {
@@ -135,6 +151,9 @@ public class App {
                         isGameOver = true;
                     }
                 }
+                g.setFont(getFont().deriveFont(20.0f));
+                g.setColor(Color.YELLOW);
+                g.drawString("Score " + score, 20, 50);
                 repaint();
             }
 
@@ -166,6 +185,28 @@ public class App {
                     System.out.println(e);
                 }
             }
-        });
+        }; // JPanel
+        f.add(p);
+        AllKeyListener kl = new AllKeyListener();
+        f.addKeyListener(kl);
     }
+
+    private class AllKeyListener implements KeyListener {
+        @Override
+        public void keyTyped(KeyEvent e) {
+            System.out.println("typed");
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            player.keyPressed(e);
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            player.keyReleased(e);
+        }
+        
+    }
+    
 }

@@ -1,20 +1,62 @@
 package source;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+
 
 public class Circle {
     private int x;
     private int y;
     private int radius;
     private Color color;
+    private int speedx;
 
     public Circle(int x, int y, int radius, Color color) {
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.color = color;
+        speedx = 0;
     }
 
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+        if(key == KeyEvent.VK_RIGHT){
+            if(x + radius < 585){
+                speedx = 5;
+            }else{
+                speedx = 0;
+            }
+        }
+        if(key == KeyEvent.VK_LEFT){
+            if(x - radius > 0){
+                speedx = -5;
+            }else{
+                speedx = 0;
+            }
+        }
+        if(key == KeyEvent.VK_UP){
+            if(radius < 40){
+                radius += 10;
+            }
+        }
+        if(key == KeyEvent.VK_DOWN){
+            if(radius > 10){
+                radius -= 10;
+            }
+        }
+        translate(speedx, 0);
+    }
+
+    public void keyReleased(KeyEvent e) {
+        int key = e.getKeyCode();
+        if(key == KeyEvent.VK_RIGHT){
+            speedx = 0;
+        }
+        if(key == KeyEvent.VK_LEFT){
+            speedx = 0;
+        }
+    }
     public double getDistance(Circle c) {
         return Math.sqrt((x-c.getX())*(x-c.getX()) + (y-c.getY())*(y-c.getY()));
     }
@@ -77,11 +119,12 @@ public class Circle {
         return "Circle [x=" + x + ", y=" + y + ", radius=" + radius + ", color=" + color + "]";
     }
 
-    public void sleep(int ms) {
-        try {
-        Thread.sleep(ms);
-        } catch (InterruptedException e) {
-        System.out.println(e);
-        }
-        }
+    public int getSpeedx() {
+        return speedx;
+    }
+
+    public void setSpeedx(int speedx) {
+        this.speedx = speedx;
+    }
+    
 }
