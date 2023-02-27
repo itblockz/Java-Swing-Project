@@ -21,11 +21,13 @@ public class App{
     private List<Circle> list;
     private List<Circle> toRemove;
     private Timer timer;
+    private Timer scoreTimer;
     private Circle player;
     private Random rand;
     private int speed;
     private int seed;
     private JPanel p;
+    private int score;
 
     public App(){
         f = new JFrame("Game");
@@ -89,7 +91,14 @@ public class App{
                 }
             }
         });
+        scoreTimer = new Timer(500, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                score++;
+            }
+        });
         timer.start();
+        scoreTimer.start();
         p = new JPanel() {
             boolean isGameOver = false;
             Image img = Toolkit.getDefaultToolkit().createImage(
@@ -118,6 +127,10 @@ public class App{
                 g.setFont(getFont().deriveFont(70.0f));
                 g.setColor(Color.PINK);
                 g.drawString("Game Over", 120, getHeight() / 2);
+
+                g.setFont(getFont().deriveFont(20.0f));
+                g.setColor(Color.YELLOW);
+                g.drawString("Score " + score, 20, 50);
             }
 
             private void play(Graphics g) {
@@ -138,6 +151,9 @@ public class App{
                         isGameOver = true;
                     }
                 }
+                g.setFont(getFont().deriveFont(20.0f));
+                g.setColor(Color.YELLOW);
+                g.drawString("Score " + score, 20, 50);
                 repaint();
             }
 

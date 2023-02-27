@@ -22,10 +22,18 @@ public class Circle {
     public void keyPressed(KeyEvent e) {
         int key = e.getKeyCode();
         if(key == KeyEvent.VK_RIGHT){
-            speedx = 5;
+            if(x + radius < 585){
+                speedx = 5;
+            }else{
+                speedx = 0;
+            }
         }
         if(key == KeyEvent.VK_LEFT){
-            speedx = -5;
+            if(x - radius > 0){
+                speedx = -5;
+            }else{
+                speedx = 0;
+            }
         }
         if(key == KeyEvent.VK_UP){
             if(radius < 40){
