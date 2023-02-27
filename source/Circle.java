@@ -9,13 +9,14 @@ public class Circle {
     private int y;
     private int radius;
     private Color color;
-    private int speedx = 0;
+    private int speedx;
 
     public Circle(int x, int y, int radius, Color color) {
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.color = color;
+        speedx = 0;
     }
 
     public void keyPressed(KeyEvent e) {
@@ -37,7 +38,6 @@ public class Circle {
             }
         }
         translate(speedx, 0);
-        System.out.println("pressed " + radius);
     }
 
     public void keyReleased(KeyEvent e) {
@@ -48,13 +48,6 @@ public class Circle {
         if(key == KeyEvent.VK_LEFT){
             speedx = 0;
         }
-        if(key == KeyEvent.VK_UP){
-            radius += 0;
-        }
-        if(key == KeyEvent.VK_DOWN){
-            radius += 0;
-        }
-        System.out.println("released");
     }
     public double getDistance(Circle c) {
         return Math.sqrt((x-c.getX())*(x-c.getX()) + (y-c.getY())*(y-c.getY()));

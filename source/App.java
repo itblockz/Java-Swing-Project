@@ -13,7 +13,6 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -27,7 +26,6 @@ public class App{
     private int speed;
     private int seed;
     private JPanel p;
-    private Circle player;
 
     public App(){
         f = new JFrame("Game");
@@ -41,7 +39,7 @@ public class App{
         speed = 250;
         seed = new Random().nextInt();
         rand = new Random(seed);
-        player = new Circle(100, 500, 40, Color.YELLOW); // can delete it's example
+        player = new Circle(300, 600, 10, Color.YELLOW); // can delete it's example
         list = new ArrayList<>();
         toRemove = new ArrayList<>();
         timer = new Timer(500, new ActionListener() {
@@ -92,7 +90,7 @@ public class App{
             }
         });
         timer.start();
-        f.add(new JPanel() {
+        p = new JPanel() {
             boolean isGameOver = false;
             Image img = Toolkit.getDefaultToolkit().createImage(
                 System.getProperty("user.dir") + File.separator + "source" + File.separator + "CS.png"
