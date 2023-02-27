@@ -91,7 +91,7 @@ public class App{
                 }
             }
         });
-        scoreTimer = new Timer(500, new ActionListener() {
+        scoreTimer = new Timer(200, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 score++;
