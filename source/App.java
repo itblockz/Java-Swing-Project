@@ -8,9 +8,14 @@ import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.List;
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class App {
+public class App{
     private JFrame f;
+    private JPanel p;
+    private Circle player;
+
     public App(){
         f = new JFrame("Game");
         f.setSize(600, 700);
@@ -20,14 +25,14 @@ public class App {
     }
 
     private void detailComponents(){
-        int speed = 500;
-        Circle player = new Circle(100, 500, 60, Color.YELLOW);
+        int speed = 500;  
+        player = new Circle(100, 500, 60, Color.YELLOW);
         List<Circle> list = new ArrayList<>();
-        Circle a = new Circle(80, 50, 70, Color.WHITE);
+        Circle a = new Circle(80, 50, 50, Color.WHITE);
         Circle b = new Circle(180, 300, 20, Color.WHITE);
         list.add(a);
         list.add(b);
-        f.add(new JPanel() {
+        p = new JPanel() {
             boolean isGameOver = false;
 
             @Override
@@ -67,6 +72,7 @@ public class App {
                         isGameOver = true;
                     }
                 }
+                repaint();
             }
 
             private List<Circle> collider(Circle circle, List<Circle> list) {
@@ -99,7 +105,29 @@ public class App {
                     System.out.println(e);
                 }
             }
-        });
+        }; // JPanel
+        f.add(p);
+        AllKeyListener kl = new AllKeyListener();
+        f.addKeyListener(kl);
     }
+
+    private class AllKeyListener implements KeyListener {
+        @Override
+        public void keyTyped(KeyEvent e) {
+            System.out.println("typed");
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            player.keyPressed(e);
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            player.keyReleased(e);
+        }
+        
+    }
+    
 }
 

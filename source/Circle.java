@@ -1,12 +1,15 @@
 package source;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+
 
 public class Circle {
     private int x;
     private int y;
     private int radius;
     private Color color;
+    private int speedx = 0;
 
     public Circle(int x, int y, int radius, Color color) {
         this.x = x;
@@ -15,6 +18,44 @@ public class Circle {
         this.color = color;
     }
 
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+        if(key == KeyEvent.VK_RIGHT){
+            speedx = 5;
+        }
+        if(key == KeyEvent.VK_LEFT){
+            speedx = -5;
+        }
+        if(key == KeyEvent.VK_UP){
+            if(radius < 40){
+                radius += 10;
+            }
+        }
+        if(key == KeyEvent.VK_DOWN){
+            if(radius > 10){
+                radius -= 10;
+            }
+        }
+        translate(speedx, 0);
+        System.out.println("pressed " + radius);
+    }
+
+    public void keyReleased(KeyEvent e) {
+        int key = e.getKeyCode();
+        if(key == KeyEvent.VK_RIGHT){
+            speedx = 0;
+        }
+        if(key == KeyEvent.VK_LEFT){
+            speedx = 0;
+        }
+        if(key == KeyEvent.VK_UP){
+            radius += 0;
+        }
+        if(key == KeyEvent.VK_DOWN){
+            radius += 0;
+        }
+        System.out.println("released");
+    }
     public double getDistance(Circle c) {
         return Math.sqrt((x-c.getX())*(x-c.getX()) + (y-c.getY())*(y-c.getY()));
     }
@@ -22,6 +63,7 @@ public class Circle {
         setX(this.x + x);
         setY(this.y + y);
     }
+    
     public int getX() {
         return x;
     }
@@ -66,6 +108,14 @@ public class Circle {
     @Override
     public String toString() {
         return "Circle [x=" + x + ", y=" + y + ", radius=" + radius + ", color=" + color + "]";
+    }
+
+    public int getSpeedx() {
+        return speedx;
+    }
+
+    public void setSpeedx(int speedx) {
+        this.speedx = speedx;
     }
     
 }
