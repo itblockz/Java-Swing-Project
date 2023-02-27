@@ -59,14 +59,16 @@ public class Circle {
     public double getDistance(Circle c) {
         return Math.sqrt((x-c.getX())*(x-c.getX()) + (y-c.getY())*(y-c.getY()));
     }
+
     public void translate(int x, int y) {
         setX(this.x + x);
         setY(this.y + y);
     }
-    
+
     public int getX() {
         return x;
     }
+
     public void setX(int x) {
         if (x > 0) {
             this.x = x;
@@ -74,9 +76,11 @@ public class Circle {
             x = 0;
         }
     }
+
     public int getY() {
         return y;
     }
+
     public void setY(int y) {
         if (y > 0) {
             this.y = y;
@@ -84,13 +88,16 @@ public class Circle {
             y = 0;
         }
     }
+
     public void setPosition(int x, int y) {
         setX(x);
         setY(y);
     }
+
     public int getRadius() {
         return radius;
     }
+
     public void setRadius(int radius) {
         if (radius > 1) {
             this.radius = radius;
@@ -101,6 +108,7 @@ public class Circle {
     public Color getColor() {
         return color;
     }
+
     public void setColor(Color color) {
         this.color = color;
     }
