@@ -1,26 +1,66 @@
 package source;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+
 
 public class Circle {
     private int x;
     private int y;
     private int radius;
     private Color color;
+    private int speed;
 
     public Circle(int x, int y, int radius, Color color) {
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.color = color;
+        speed = 0;
     }
 
-    //หาระยะห่างระหว่างวงกลม
+    public void keyPressed(KeyEvent e) {
+        int key = e.getKeyCode();
+        if(key == KeyEvent.VK_RIGHT){
+            if(x + radius < 585){
+                speed = 5;
+            }else{
+                speed = 0;
+            }
+        }
+        if(key == KeyEvent.VK_LEFT){
+            if(x - radius > 0){
+                speed = -5;
+            }else{
+                speed = 0;
+            }
+        }
+        if(key == KeyEvent.VK_UP){
+            if(radius < 40){
+                radius += 10;
+            }
+        }
+        if(key == KeyEvent.VK_DOWN){
+            if(radius > 10){
+                radius -= 10;
+            }
+        }
+    }
+
+    public void keyReleased(KeyEvent e) {
+        int key = e.getKeyCode();
+        if(key == KeyEvent.VK_RIGHT){
+            speed = 0;
+        }
+        if(key == KeyEvent.VK_LEFT){
+            speed = 0;
+        }
+    }
+    
     public double getDistance(Circle c) {
         return Math.sqrt((x-c.getX())*(x-c.getX()) + (y-c.getY())*(y-c.getY()));
     }
 
-    //เลื่อน (เคลื่อนที่)
     public void translate(int x, int y) {
         setX(this.x + x);
         setY(this.y + y);
@@ -66,6 +106,7 @@ public class Circle {
             radius = 1;
         }
     }
+
     public Color getColor() {
         return color;
     }
@@ -74,16 +115,18 @@ public class Circle {
         this.color = color;
     }
 
+    public int getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(int speed) {
+        this.speed = speed;
+    }
+    
     @Override
     public String toString() {
         return "Circle [x=" + x + ", y=" + y + ", radius=" + radius + ", color=" + color + "]";
     }
 
-    public void sleep(int ms) {
-        try {
-        Thread.sleep(ms);
-        } catch (InterruptedException e) {
-        System.out.println(e);
-        }
-        }
+    
 }
