@@ -194,21 +194,31 @@ public class App {
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_RIGHT) {
-                player.setSpeed(2);
+                player.setSpeed(5-player.getRadius()/10);
             }
             if (key == KeyEvent.VK_LEFT) {
-                player.setSpeed(-2);
+                player.setSpeed(-(5-player.getRadius()/10));
             }
             if (key == KeyEvent.VK_UP) {
                 if (player.getRadius() < 40) {
                     player.setRadius(player.getRadius()+10);
                     player.setColor(Color.getHSBColor((60-player.getRadius())*0.01f, 1, 1));
+                    if (player.getSpeed() < 0) {
+                        player.setSpeed(player.getSpeed()+1);
+                    } else if (player.getSpeed() > 0) {
+                        player.setSpeed(player.getSpeed()-1);
+                    }
                 }
             }
             if (key == KeyEvent.VK_DOWN) {
                 if (player.getRadius() > 10) {
                     player.setRadius(player.getRadius()-10);
                     player.setColor(Color.getHSBColor((60-player.getRadius())*0.01f, 1, 1));
+                    if (player.getSpeed() < 0) {
+                        player.setSpeed(player.getSpeed()-1);
+                    } else if (player.getSpeed() > 0) {
+                        player.setSpeed(player.getSpeed()+1);
+                    }
                 }
             }
         }
