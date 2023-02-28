@@ -8,13 +8,13 @@ import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionListener;
-import java.io.File;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 
 public class App {
     private JFrame f;
@@ -22,11 +22,11 @@ public class App {
     private List<Circle> list;
     private List<Circle> toRemove;
     private Circle player;
-    private Timer timer;
+    private Timer dropTimer;
     private Timer scoreTimer;
     private Timer playerTimer;
+    private Timer circleTimer;
     private Random rand;
-    private int speed;
     private int seed;
     private int score;
     private Image img;
@@ -40,39 +40,20 @@ public class App {
     }
 
     private void detailComponents() {
-        speed = 250;
         seed = new Random().nextInt();
+        player = new Circle(300, 600, 10, Color.YELLOW);
         rand = new Random(seed);
-        player = new Circle(300, 600, 10, Color.YELLOW); // can delete it's example
         list = new ArrayList<>();
         toRemove = new ArrayList<>();
-        timer = new Timer(500, new ActionListener() {
+        dropTimer = new Timer(500, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int ball = 1;
+                int ball = 2;
                 int x = 0;
                 int radius = 0;
 
                 for (int p = 0; p < ball; p++) {
-                    // int random = rand.nextInt(5)+1; // สุ่มเพื่อหาเคส
-                    int random2 = rand.nextInt(5)+1;
-
-                    // switch (random) {
-                    //     case 1:
-                    //         x = 100;
-                    //         break;
-                    //     case 2:
-                    //         x = 200;
-                    //         break;
-                    //     case 3:
-                    //         x = 300;
-                    //         break;
-                    //     case 4:
-                    //         x = 400;
-                    //         break;
-                    //     case 5:
-                    //         x = 500;
-                    // }
-                    switch (random2) {
+                    int random = rand.nextInt(5)+1; // สุ่มเพื่อหาเคส
+                    switch (random) {
                         case 1:
                             radius = 10;
                             break;
@@ -93,7 +74,7 @@ public class App {
                 }
             }
         }); // timer
-        scoreTimer = new Timer(200, new ActionListener() {
+        scoreTimer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 score++;
@@ -109,12 +90,21 @@ public class App {
                 }
             }
         }); // playerTimer
+        circleTimer = new Timer(1, new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+                for (Circle c : list) {
+                    c.translate(0, 3);
+                }
+           } 
+        }); // circleTimer
         img = Toolkit.getDefaultToolkit().createImage(
             System.getProperty("user.dir") + File.separator + "source" + File.separator + "CS.png"
         );
-        timer.start();
+        dropTimer.start();
         scoreTimer.start();
         playerTimer.start();
+        circleTimer.start();
         p = new JPanel() {
             boolean isGameOver = false;
                  
@@ -131,9 +121,10 @@ public class App {
             }
 
             private void gameover(Graphics g) {
-                timer.stop();
+                dropTimer.stop();
                 scoreTimer.stop();
                 playerTimer.stop();
+                circleTimer.stop();
                 draw(player, g);
                 for (Circle c : list) {
                     draw(c, g);
@@ -152,13 +143,11 @@ public class App {
                 draw(player, g);
                 for (Circle c : list) {
                     draw(c, g);
-                    gravity(c);
                     if (c.getY() - c.getRadius() > getHeight()){
                         toRemove.add(c);
                     }
                 }
                 list.removeAll(toRemove);
-                sleep(1000/speed);
                 for(Circle c : collider(player, list)) {
                     if (player.getRadius() > c.getRadius()) {
                         list.remove(c);
@@ -182,23 +171,10 @@ public class App {
                 return col;
             }
 
-            private void gravity(Circle c) {
-                c.translate(0, 1);
-                repaint();
-            }
-
             private void draw(Circle c, Graphics g) {
                 g.setColor(c.getColor());
                 g.fillOval(c.getX() - c.getRadius(), c.getY() - c.getRadius(),
                         c.getRadius() * 2, c.getRadius() * 2);
-            }
-
-            private void sleep(int ms) {
-                try {
-                    Thread.sleep(ms);
-                } catch (InterruptedException e) {
-                    System.out.println(e);
-                }
             }
         }; // JPanel
         f.add(p);
@@ -209,7 +185,7 @@ public class App {
     private class AllKeyListener implements KeyListener {
         @Override
         public void keyTyped(KeyEvent e) {
-            
+            // nothing
         }
 
         @Override
