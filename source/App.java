@@ -34,6 +34,7 @@ public class App {
     public App() {
         f = new JFrame("Game");
         f.setSize(600, 700);
+        f.setResizable(false);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         detailComponents();
         f.setVisible(true);
