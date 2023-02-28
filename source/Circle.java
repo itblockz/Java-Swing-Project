@@ -1,8 +1,6 @@
 package source;
 
 import java.awt.Color;
-import java.awt.event.KeyEvent;
-
 
 public class Circle {
     private int x;
@@ -17,44 +15,6 @@ public class Circle {
         this.radius = radius;
         this.color = color;
         speed = 0;
-    }
-
-    public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
-        if(key == KeyEvent.VK_RIGHT){
-            if(x + radius < 585){
-                speed = 5;
-            }else{
-                speed = 0;
-            }
-        }
-        if(key == KeyEvent.VK_LEFT){
-            if(x - radius > 0){
-                speed = -5;
-            }else{
-                speed = 0;
-            }
-        }
-        if(key == KeyEvent.VK_UP){
-            if(radius < 40){
-                radius += 10;
-            }
-        }
-        if(key == KeyEvent.VK_DOWN){
-            if(radius > 10){
-                radius -= 10;
-            }
-        }
-    }
-
-    public void keyReleased(KeyEvent e) {
-        int key = e.getKeyCode();
-        if(key == KeyEvent.VK_RIGHT){
-            speed = 0;
-        }
-        if(key == KeyEvent.VK_LEFT){
-            speed = 0;
-        }
     }
     
     public double getDistance(Circle c) {

@@ -71,12 +71,12 @@ public class App {
                         case 5:
                             radius = 50;
                     }
-                    x = rand.nextInt(580) + 10;
+                    x = rand.nextInt(581) + 10;
                     color = Color.getHSBColor((6-random)*0.1f, 1, 0.5f);
                     list.add(new Circle(x, 0, radius, color));
                 }
             }
-        }); // timer
+        }); // dropTimer
         scoreTimer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -97,7 +97,7 @@ public class App {
            @Override
            public void actionPerformed(ActionEvent e) {
                 for (Circle c : list) {
-                    c.translate(0, (50/c.getRadius())+3);
+                    c.translate(0, (50/c.getRadius())+4);
                 }
            } 
         }); // circleTimer
