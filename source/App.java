@@ -31,19 +31,10 @@ public class App {
 
     private void detailComponents() {
         speed = 500;
-        player = new Circle(100, 500, 60, Color.YELLOW); // can delete it's example
+        player = new Circle(100, 500, 40, Color.YELLOW); // can delete it's example
         list = new ArrayList<>();
         toRemove = new ArrayList<>();
-        timer = new Timer(500, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Random Here
-                list.add(new Circle(300, 0, 50, Color.WHITE)); // can delete it's example
-            } 
-        int speed = 500;
-        Circle player = new Circle(100, 500, 40, Color.YELLOW); // can delete it's example
-        List<Circle> list = new ArrayList<>();
-        Timer timer = new Timer(2500, new ActionListener() {
+        timer = new Timer(1000, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
