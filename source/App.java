@@ -41,7 +41,7 @@ public class App {
 
     private void detailComponents() {
         seed = new Random().nextInt();
-        player = new Circle(300, 600, 10, Color.YELLOW);
+        player = new Circle(300, 600, 10, Color.getHSBColor(0.5f, 1, 1));
         rand = new Random(seed);
         list = new ArrayList<>();
         toRemove = new ArrayList<>();
@@ -50,6 +50,7 @@ public class App {
                 int ball = 2;
                 int x = 0;
                 int radius = 0;
+                Color color;
 
                 for (int p = 0; p < ball; p++) {
                     int random = rand.nextInt(5)+1; // สุ่มเพื่อหาเคส
@@ -70,7 +71,8 @@ public class App {
                             radius = 50;
                     }
                     x = rand.nextInt(580) + 10;
-                    list.add(new Circle(x, 0, radius, Color.WHITE));
+                    color = Color.getHSBColor((6-random)*0.1f, 1, 0.5f);
+                    list.add(new Circle(x, 0, radius, color));
                 }
             }
         }); // timer
@@ -94,7 +96,7 @@ public class App {
            @Override
            public void actionPerformed(ActionEvent e) {
                 for (Circle c : list) {
-                    c.translate(0, 3);
+                    c.translate(0, (50/c.getRadius())+3);
                 }
            } 
         }); // circleTimer
@@ -200,11 +202,13 @@ public class App {
             if (key == KeyEvent.VK_UP) {
                 if (player.getRadius() < 40) {
                     player.setRadius(player.getRadius()+10);
+                    player.setColor(Color.getHSBColor((60-player.getRadius())*0.01f, 1, 1));
                 }
             }
             if (key == KeyEvent.VK_DOWN) {
                 if (player.getRadius() > 10) {
                     player.setRadius(player.getRadius()-10);
+                    player.setColor(Color.getHSBColor((60-player.getRadius())*0.01f, 1, 1));
                 }
             }
         }
