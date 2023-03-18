@@ -41,9 +41,6 @@ public class App2 {
             public void paint(Graphics g) {
                 super.paint(g);
             }
-            private void setTimer(Graphics g) {
-
-            }
         };
         graphics = p.getGraphics();
         p.paint(graphics);
