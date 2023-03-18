@@ -52,7 +52,6 @@ public class App {
             public void paint(Graphics g) {
                 super.paint(g);
                 setBackground(Color.BLACK);
-                g.drawImage(img, 300, 300, 256, 256, null); // img
                 if (!isGameOver) {
                     play(g);
                 } else {
@@ -83,11 +82,13 @@ public class App {
                 g.setFont(getFont().deriveFont(20.0f));
                 g.setColor(Color.LIGHT_GRAY);
                 g.drawString("Press Enter to Restart", 200, 400);
+                isGameOver = false;
                 f.addKeyListener(ekl);
             }
 
             private void play(Graphics g) {
                 draw(player, g);
+                g.drawImage(img, player.getX(), player.getY(), player.getRadius()*2, player.getRadius()*2, null); // img
                 toRemove.clear();
                 for (Circle c : list) {
                     draw(c, g);
