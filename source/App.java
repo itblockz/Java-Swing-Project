@@ -22,14 +22,18 @@ public class App {
     private List<Circle> list;
     private List<Circle> toRemove;
     private Circle player;
-    private Timer dropTimer;
+    private Timer spawnTimer;
     private Timer scoreTimer;
     private Timer playerTimer;
     private Timer circleTimer;
+    private Timer increaseSpeedTimer;
     private Random rand;
     private int seed;
     private int score;
     private Image img;
+    private int speed;
+    private AllKeyListener akl;
+    private EnterKeyListener ekl;
 
     public App() {
         f = new JFrame("Game");
@@ -41,42 +45,35 @@ public class App {
     }
 
     private void detailComponents() {
+        akl = new AllKeyListener();
+        ekl = new EnterKeyListener();
+        toRemove = new ArrayList<>();
+        p = new JPanel() {
+            @Override
+            public void paint(Graphics g) {
+                super.paint(g);
+                setBackground(Color.BLACK);
+            }
+        };
+        f.add(p);
+        newGame();
+        f.addKeyListener(ekl);
+    }
+
+    private void newGame() {
+        // speed = 3;
         seed = new Random().nextInt();
         player = new Circle(300, 600, 10, Color.getHSBColor(0.5f, 1, 1));
         rand = new Random(seed);
         list = new ArrayList<>();
-        toRemove = new ArrayList<>();
-        dropTimer = new Timer(500, new ActionListener() {
+        spawnTimer = new Timer(250, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                int ball = 2;
-                int x = 0;
-                int radius = 0;
-                Color color;
-
-                for (int p = 0; p < ball; p++) {
-                    int random = rand.nextInt(5)+1; // สุ่มเพื่อหาเคส
-                    switch (random) {
-                        case 1:
-                            radius = 10;
-                            break;
-                        case 2:
-                            radius = 20;
-                            break;
-                        case 3:
-                            radius = 30;
-                            break;
-                        case 4:
-                            radius = 40;
-                            break;
-                        case 5:
-                            radius = 50;
-                    }
-                    x = rand.nextInt(581) + 10;
-                    color = Color.getHSBColor((6-random)*0.1f, 1, 0.5f);
-                    list.add(new Circle(x, 0, radius, color));
-                }
+                int x = rand.nextInt(581) + 10;
+                int radius = (rand.nextInt(5)+1)*10;
+                Color color = Color.getHSBColor((6-radius/10)*0.1f, 1, 0.5f);
+                list.add(new Circle(x, 0, radius, color));
             }
-        }); // dropTimer
+        }); // spawnTimer
         scoreTimer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -97,17 +94,23 @@ public class App {
            @Override
            public void actionPerformed(ActionEvent e) {
                 for (Circle c : list) {
-                    c.translate(0, (50/c.getRadius())+4);
+                    c.translate(0, (6-c.getRadius()/10)+5);
                 }
            } 
         }); // circleTimer
+        // increaseSpeedTimer = new Timer(10000, new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         if (speed < 8) {
+        //             speed++;
+        //             System.out.println(speed);
+        //         }
+        //     }
+        // }); 
         img = Toolkit.getDefaultToolkit().createImage(
             System.getProperty("user.dir") + File.separator + "source" + File.separator + "CS.png"
         );
-        dropTimer.start();
-        scoreTimer.start();
-        playerTimer.start();
-        circleTimer.start();
+        // increaseSpeedTimer.start();
         p = new JPanel() {
             boolean isGameOver = false;
                  
@@ -115,7 +118,7 @@ public class App {
             public void paint(Graphics g) {
                 super.paint(g);
                 setBackground(Color.BLACK);
-                // g.drawImage(img, 300, 300, 256, 256, null); // img
+                g.drawImage(img, 300, 300, 256, 256, null); // img
                 if (!isGameOver) {
                     play(g);
                 } else {
@@ -124,10 +127,12 @@ public class App {
             }
 
             private void gameover(Graphics g) {
-                dropTimer.stop();
+                f.removeKeyListener(akl);
+                spawnTimer.stop();
                 scoreTimer.stop();
                 playerTimer.stop();
                 circleTimer.stop();
+                // increaseSpeedTimer.stop();
                 draw(player, g);
                 for (Circle c : list) {
                     draw(c, g);
@@ -135,15 +140,21 @@ public class App {
                 // Game Over Graphic
                 g.setFont(getFont().deriveFont(70.0f));
                 g.setColor(Color.PINK);
-                g.drawString("Game Over", 120, getHeight() / 2);
+                g.drawString("Game Over", 120, getHeight()/2);
                 // Score Graphic
                 g.setFont(getFont().deriveFont(20.0f));
                 g.setColor(Color.YELLOW);
                 g.drawString("Score " + score, 20, 50);
+                // Restart Graphic
+                g.setFont(getFont().deriveFont(20.0f));
+                g.setColor(Color.LIGHT_GRAY);
+                g.drawString("Press Enter to Restart", 200, 400);
+                f.addKeyListener(ekl);
             }
 
             private void play(Graphics g) {
                 draw(player, g);
+                toRemove.clear();
                 for (Circle c : list) {
                     draw(c, g);
                     if (c.getY() - c.getRadius() > getHeight()){
@@ -181,10 +192,40 @@ public class App {
             }
         }; // JPanel
         f.add(p);
-        AllKeyListener kl = new AllKeyListener();
-        f.addKeyListener(kl);
-    } // detailComponent
+        f.addKeyListener(akl);
+        spawnTimer.start();
+        scoreTimer.start();
+        playerTimer.start();
+        circleTimer.start();
+    }
+    private class EnterKeyListener implements KeyListener {
+        @Override
+        public void keyTyped(KeyEvent e) {
+            // nothing
+        }
 
+        @Override
+        public void keyPressed(KeyEvent e) {
+            // nothing
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            int key = e.getKeyCode();
+            if (key == KeyEvent.VK_ENTER) {
+                System.out.println("restart");
+                p = new JPanel() {
+                    @Override
+                    public void paint(Graphics g) {
+                        super.paint(g);
+                        setBackground(Color.GRAY);
+                    }
+                };
+                f.add(p);
+            }
+        }
+
+    }
     private class AllKeyListener implements KeyListener {
         @Override
         public void keyTyped(KeyEvent e) {
@@ -196,11 +237,9 @@ public class App {
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_RIGHT) {
                 player.setSpeed(5-player.getRadius()/10);
-            }
-            if (key == KeyEvent.VK_LEFT) {
+            } else if (key == KeyEvent.VK_LEFT) {
                 player.setSpeed(-(5-player.getRadius()/10));
-            }
-            if (key == KeyEvent.VK_UP) {
+            }else if (key == KeyEvent.VK_UP) {
                 if (player.getRadius() < 40) {
                     player.setRadius(player.getRadius()+10);
                     player.setColor(Color.getHSBColor((60-player.getRadius())*0.01f, 1, 1));
@@ -210,8 +249,7 @@ public class App {
                         player.setSpeed(player.getSpeed()-1);
                     }
                 }
-            }
-            if (key == KeyEvent.VK_DOWN) {
+            } else if (key == KeyEvent.VK_DOWN) {
                 if (player.getRadius() > 10) {
                     player.setRadius(player.getRadius()-10);
                     player.setColor(Color.getHSBColor((60-player.getRadius())*0.01f, 1, 1));
@@ -235,4 +273,5 @@ public class App {
             }
         }
     } // AllKeyListener
+
 } // App

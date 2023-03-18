@@ -1,6 +1,7 @@
 package source;
 
 import java.awt.Color;
+import java.awt.Graphics;
 
 public class Circle {
     private int x;
@@ -15,6 +16,10 @@ public class Circle {
         this.radius = radius;
         this.color = color;
         speed = 0;
+    }
+
+    public void draw(Graphics g) {
+        g.fillOval(x, y, radius*2, radius*2);
     }
     
     public double getDistance(Circle c) {
