@@ -2,24 +2,40 @@ package source;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 
 public class Circle {
     private int x;
     private int y;
-    private int radius;
-    private Color color;
-    private int speed;
+    protected int radius;
+    protected Color color;
+    protected int speed;
+    private Image image;
 
-    public Circle(int x, int y, int radius, Color color) {
+    public Circle(int x, int y, int r, Image img) {
         this.x = x;
         this.y = y;
-        this.radius = radius;
-        this.color = color;
-        speed = 0;
+        radius = r;
+        image = img;
+        setColor();
+        setSpeed(1);
     }
 
     public void draw(Graphics g) {
-        g.fillOval(x, y, radius*2, radius*2);
+        g.setColor(color);
+        g.fillOval(x-radius, y-radius, radius*2, radius*2);
+        g.drawImage(image, x-radius, y-radius, radius*2, radius*2, null);
+    }
+
+    public int compare(Circle c) {
+        return radius - c.radius;
+    }
+
+    public boolean isCollide(Circle c) {
+        if (radius + c.radius >= getDistance(c)) {
+            return true;
+        }
+        return false;
     }
     
     public double getDistance(Circle c) {
@@ -64,11 +80,24 @@ public class Circle {
         return radius;
     }
 
-    public void setRadius(int radius) {
+    public void setRadius(int r) {
         if (radius > 1) {
-            this.radius = radius;
+            radius = r;
         } else {
             radius = 1;
+        }
+        setColor();
+    }
+
+    public void changeRadius(int r) {
+        if (radius + r > 0) {
+            radius += r;
+        }
+        setColor();
+        if (speed > 0) {
+            setSpeed(1);
+        } else if (speed < 0) {
+            setSpeed(-1);
         }
     }
 
@@ -76,16 +105,26 @@ public class Circle {
         return color;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void setColor() {
+        color = Color.getHSBColor((6-radius/10)*0.1f, 1, 0.8f);
     }
 
     public int getSpeed() {
         return speed;
     }
 
-    public void setSpeed(int speed) {
-        this.speed = speed;
+    public void setSpeed(int spd) {
+        if (spd > 0) {
+            speed = 6 - radius/10;
+        } else if (spd < 0) {
+            speed = radius/10 - 6;
+        } else {
+            speed = 0;
+        }
+    }
+
+    public void setImage(Image img) {
+        image = img;
     }
     
     @Override
