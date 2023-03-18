@@ -1,16 +1,11 @@
 package source;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.Timer;
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +25,7 @@ public class App {
     private int seed;
     private int score;
     private Image img;
+    private boolean gameStart = false;
 
     public App() {
         f = new JFrame("Game");
@@ -54,7 +50,7 @@ public class App {
                 Color color;
 
                 for (int p = 0; p < ball; p++) {
-                    int random = rand.nextInt(5)+1; // สุ่มเพื่อหาเคส
+                    int random = rand.nextInt(5) + 1; // สุ่มเพื่อหาเคส
                     switch (random) {
                         case 1:
                             radius = 10;
@@ -72,7 +68,7 @@ public class App {
                             radius = 50;
                     }
                     x = rand.nextInt(581) + 10;
-                    color = Color.getHSBColor((6-random)*0.1f, 1, 0.5f);
+                    color = Color.getHSBColor((6 - random) * 0.1f, 1, 0.5f);
                     list.add(new Circle(x, 0, radius, color));
                 }
             }
@@ -94,33 +90,62 @@ public class App {
             }
         }); // playerTimer
         circleTimer = new Timer(1, new ActionListener() {
-           @Override
-           public void actionPerformed(ActionEvent e) {
+            @Override
+            public void actionPerformed(ActionEvent e) {
                 for (Circle c : list) {
-                    c.translate(0, (50/c.getRadius())+4);
+                    c.translate(0, (50 / c.getRadius()) + 4);
                 }
-           } 
+            }
         }); // circleTimer
         img = Toolkit.getDefaultToolkit().createImage(
-            System.getProperty("user.dir") + File.separator + "source" + File.separator + "CS.png"
-        );
-        dropTimer.start();
-        scoreTimer.start();
+                System.getProperty("user.dir") + File.separator + "source" + File.separator + "CS.png");
+
         playerTimer.start();
-        circleTimer.start();
+
+        f.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                if (e.getKeyChar() == KeyEvent.VK_SPACE) {
+                    dropTimer.start();
+                    scoreTimer.start();
+                    circleTimer.start();
+                    gameStart = true;
+                    System.out.println("hi");
+                    // Spacebar was pressed
+                    // Add your code here
+                }
+            }
+        });
+
+        // Set the panel as focusable so it can receive keyboard events
+        f.setFocusable(true);
+
         p = new JPanel() {
             boolean isGameOver = false;
-                 
+
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
                 setBackground(Color.BLACK);
-                // g.drawImage(img, 300, 300, 256, 256, null); // img
-                if (!isGameOver) {
+                g.drawImage(img, 300, 300, 256, 256, null); // img
+                if (!gameStart) {
+                    idle(g);
+                } 
+
+                else if (!isGameOver) {
                     play(g);
-                } else {
+                }
+
+                else {
                     gameover(g);
                 }
+            }
+
+            private void idle(Graphics g) {
+                g.setFont(getFont().deriveFont(20.0f));
+                g.setColor(Color.WHITE);
+                g.drawString("Press Spacebar to Start ", 180, 250);
+                repaint();
             }
 
             private void gameover(Graphics g) {
@@ -146,12 +171,12 @@ public class App {
                 draw(player, g);
                 for (Circle c : list) {
                     draw(c, g);
-                    if (c.getY() - c.getRadius() > getHeight()){
+                    if (c.getY() - c.getRadius() > getHeight()) {
                         toRemove.add(c);
                     }
                 }
                 list.removeAll(toRemove);
-                for(Circle c : collider(player, list)) {
+                for (Circle c : collider(player, list)) {
                     if (player.getRadius() > c.getRadius()) {
                         list.remove(c);
                     } else {
@@ -161,6 +186,9 @@ public class App {
                 g.setFont(getFont().deriveFont(20.0f));
                 g.setColor(Color.YELLOW);
                 g.drawString("Score " + score, 20, 50);
+                g.setFont(getFont().deriveFont(20.0f));
+                g.setColor(Color.YELLOW);
+
                 repaint();
             }
 
@@ -195,30 +223,30 @@ public class App {
         public void keyPressed(KeyEvent e) {
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_RIGHT) {
-                player.setSpeed(5-player.getRadius()/10);
+                player.setSpeed(5 - player.getRadius() / 10);
             }
             if (key == KeyEvent.VK_LEFT) {
-                player.setSpeed(-(5-player.getRadius()/10));
+                player.setSpeed(-(5 - player.getRadius() / 10));
             }
             if (key == KeyEvent.VK_UP) {
                 if (player.getRadius() < 40) {
-                    player.setRadius(player.getRadius()+10);
-                    player.setColor(Color.getHSBColor((60-player.getRadius())*0.01f, 1, 1));
+                    player.setRadius(player.getRadius() + 10);
+                    player.setColor(Color.getHSBColor((60 - player.getRadius()) * 0.01f, 1, 1));
                     if (player.getSpeed() < 0) {
-                        player.setSpeed(player.getSpeed()+1);
+                        player.setSpeed(player.getSpeed() + 1);
                     } else if (player.getSpeed() > 0) {
-                        player.setSpeed(player.getSpeed()-1);
+                        player.setSpeed(player.getSpeed() - 1);
                     }
                 }
             }
             if (key == KeyEvent.VK_DOWN) {
                 if (player.getRadius() > 10) {
-                    player.setRadius(player.getRadius()-10);
-                    player.setColor(Color.getHSBColor((60-player.getRadius())*0.01f, 1, 1));
+                    player.setRadius(player.getRadius() - 10);
+                    player.setColor(Color.getHSBColor((60 - player.getRadius()) * 0.01f, 1, 1));
                     if (player.getSpeed() < 0) {
-                        player.setSpeed(player.getSpeed()-1);
+                        player.setSpeed(player.getSpeed() - 1);
                     } else if (player.getSpeed() > 0) {
-                        player.setSpeed(player.getSpeed()+1);
+                        player.setSpeed(player.getSpeed() + 1);
                     }
                 }
             }
@@ -227,10 +255,10 @@ public class App {
         @Override
         public void keyReleased(KeyEvent e) {
             int key = e.getKeyCode();
-            if(key == KeyEvent.VK_RIGHT){
+            if (key == KeyEvent.VK_RIGHT) {
                 player.setSpeed(0);
             }
-            if(key == KeyEvent.VK_LEFT){
+            if (key == KeyEvent.VK_LEFT) {
                 player.setSpeed(0);
             }
         }
