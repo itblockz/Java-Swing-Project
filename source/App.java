@@ -45,72 +45,6 @@ public class App {
     }
 
     private void detailComponents() {
-        akl = new AllKeyListener();
-        ekl = new EnterKeyListener();
-        toRemove = new ArrayList<>();
-        p = new JPanel() {
-            @Override
-            public void paint(Graphics g) {
-                super.paint(g);
-                setBackground(Color.BLACK);
-            }
-        };
-        f.add(p);
-        newGame();
-        f.addKeyListener(ekl);
-    }
-
-    private void newGame() {
-        // speed = 3;
-        seed = new Random().nextInt();
-        player = new Circle(300, 600, 10, Color.getHSBColor(0.5f, 1, 1));
-        rand = new Random(seed);
-        list = new ArrayList<>();
-        spawnTimer = new Timer(250, new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                int x = rand.nextInt(581) + 10;
-                int radius = (rand.nextInt(5)+1)*10;
-                Color color = Color.getHSBColor((6-radius/10)*0.1f, 1, 0.5f);
-                list.add(new Circle(x, 0, radius, color));
-            }
-        }); // spawnTimer
-        scoreTimer = new Timer(100, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                score++;
-            }
-        }); // scoreTimer
-        playerTimer = new Timer(1, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (player.getSpeed() < 0 && player.getX() - player.getRadius() > 0) {
-                    player.translate(player.getSpeed(), 0);
-                } else if (player.getSpeed() > 0 && player.getX() + player.getRadius() < p.getWidth()) {
-                    player.translate(player.getSpeed(), 0);
-                }
-            }
-        }); // playerTimer
-        circleTimer = new Timer(1, new ActionListener() {
-           @Override
-           public void actionPerformed(ActionEvent e) {
-                for (Circle c : list) {
-                    c.translate(0, (6-c.getRadius()/10)+5);
-                }
-           } 
-        }); // circleTimer
-        // increaseSpeedTimer = new Timer(10000, new ActionListener() {
-        //     @Override
-        //     public void actionPerformed(ActionEvent e) {
-        //         if (speed < 8) {
-        //             speed++;
-        //             System.out.println(speed);
-        //         }
-        //     }
-        // }); 
-        img = Toolkit.getDefaultToolkit().createImage(
-            System.getProperty("user.dir") + File.separator + "source" + File.separator + "CS.png"
-        );
-        // increaseSpeedTimer.start();
         p = new JPanel() {
             boolean isGameOver = false;
                  
@@ -192,6 +126,63 @@ public class App {
             }
         }; // JPanel
         f.add(p);
+        newGame();
+    }
+
+    private void newGame() {
+        // speed = 3;
+        akl = new AllKeyListener();
+        ekl = new EnterKeyListener();
+        toRemove = new ArrayList<>();
+        seed = new Random().nextInt();
+        player = new Circle(300, 600, 10, Color.getHSBColor(0.5f, 1, 1));
+        rand = new Random(seed);
+        list = new ArrayList<>();
+        spawnTimer = new Timer(250, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int x = rand.nextInt(581) + 10;
+                int radius = (rand.nextInt(5)+1)*10;
+                Color color = Color.getHSBColor((6-radius/10)*0.1f, 1, 0.5f);
+                list.add(new Circle(x, 0, radius, color));
+            }
+        }); // spawnTimer
+        scoreTimer = new Timer(100, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                score++;
+            }
+        }); // scoreTimer
+        playerTimer = new Timer(1, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (player.getSpeed() < 0 && player.getX() - player.getRadius() > 0) {
+                    player.translate(player.getSpeed(), 0);
+                } else if (player.getSpeed() > 0 && player.getX() + player.getRadius() < p.getWidth()) {
+                    player.translate(player.getSpeed(), 0);
+                }
+            }
+        }); // playerTimer
+        circleTimer = new Timer(1, new ActionListener() {
+           @Override
+           public void actionPerformed(ActionEvent e) {
+                for (Circle c : list) {
+                    c.translate(0, (6-c.getRadius()/10)+5);
+                }
+           } 
+        }); // circleTimer
+        // increaseSpeedTimer = new Timer(10000, new ActionListener() {
+        //     @Override
+        //     public void actionPerformed(ActionEvent e) {
+        //         if (speed < 8) {
+        //             speed++;
+        //             System.out.println(speed);
+        //         }
+        //     }
+        // }); 
+        img = Toolkit.getDefaultToolkit().createImage(
+            System.getProperty("user.dir") + File.separator + "source" + File.separator + "CS.png"
+        );
+        // increaseSpeedTimer.start();
         f.addKeyListener(akl);
         spawnTimer.start();
         scoreTimer.start();
@@ -214,14 +205,8 @@ public class App {
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_ENTER) {
                 System.out.println("restart");
-                p = new JPanel() {
-                    @Override
-                    public void paint(Graphics g) {
-                        super.paint(g);
-                        setBackground(Color.GRAY);
-                    }
-                };
-                f.add(p);
+                newGame();
+                p.repaint();
             }
         }
 

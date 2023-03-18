@@ -39,10 +39,14 @@ public class App2 {
         p = new JPanel() {
             @Override
             public void paint(Graphics g) {
-                g = getGraphics();
                 super.paint(g);
             }
+            private void setTimer(Graphics g) {
+
+            }
         };
+        graphics = p.getGraphics();
+        p.paint(graphics);
         spawnTimer = new Timer(250, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int x = random.nextInt(581) + 10;
@@ -65,7 +69,7 @@ public class App2 {
         f.addKeyListener(enter);
         newGame();
         play();
-        p.getGraphics().fillOval(300, 300, 10, 10);
+        graphics.fillOval(300, 300, 10, 10);
     }
     
     private void newGame() {
