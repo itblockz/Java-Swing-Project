@@ -67,6 +67,11 @@ public class App {
                 circleTimer.stop();
                 // increaseSpeedTimer.stop();
                 draw(player, g);
+                img = Toolkit.getDefaultToolkit().createImage(
+                    System.getProperty("user.dir") + File.separator + "source" + File.separator + "sad.png"
+                );
+                g.drawImage(img, player.getX()-player.getRadius(), player.getY()-player.getRadius(),
+                            player.getRadius()*2, player.getRadius()*2, null); // img
                 for (Circle c : list) {
                     draw(c, g);
                 }
@@ -88,7 +93,8 @@ public class App {
 
             private void play(Graphics g) {
                 draw(player, g);
-                g.drawImage(img, player.getX(), player.getY(), player.getRadius()*2, player.getRadius()*2, null); // img
+                g.drawImage(img, player.getX()-player.getRadius(), player.getY()-player.getRadius(),
+                            player.getRadius()*2, player.getRadius()*2, null); // img
                 toRemove.clear();
                 for (Circle c : list) {
                     draw(c, g);
@@ -132,6 +138,7 @@ public class App {
 
     private void newGame() {
         // speed = 3;
+        score = 0;
         akl = new AllKeyListener();
         ekl = new EnterKeyListener();
         toRemove = new ArrayList<>();
@@ -181,7 +188,7 @@ public class App {
         //     }
         // }); 
         img = Toolkit.getDefaultToolkit().createImage(
-            System.getProperty("user.dir") + File.separator + "source" + File.separator + "CS.png"
+            System.getProperty("user.dir") + File.separator + "source" + File.separator + "fight.png"
         );
         // increaseSpeedTimer.start();
         f.addKeyListener(akl);
