@@ -52,7 +52,6 @@ public class App {
             public void paint(Graphics g) {
                 super.paint(g);
                 setBackground(Color.BLACK);
-                g.drawImage(img, 300, 300, 256, 256, null); // img
                 if (!isGameOver) {
                     play(g);
                 } else {
@@ -68,6 +67,11 @@ public class App {
                 circleTimer.stop();
                 // increaseSpeedTimer.stop();
                 draw(player, g);
+                img = Toolkit.getDefaultToolkit().createImage(
+                    System.getProperty("user.dir") + File.separator + "source" + File.separator + "sad.png"
+                );
+                g.drawImage(img, player.getX()-player.getRadius(), player.getY()-player.getRadius(),
+                            player.getRadius()*2, player.getRadius()*2, null); // img
                 for (Circle c : list) {
                     draw(c, g);
                 }
@@ -83,11 +87,14 @@ public class App {
                 g.setFont(getFont().deriveFont(20.0f));
                 g.setColor(Color.LIGHT_GRAY);
                 g.drawString("Press Enter to Restart", 200, 400);
+                isGameOver = false;
                 f.addKeyListener(ekl);
             }
 
             private void play(Graphics g) {
                 draw(player, g);
+                g.drawImage(img, player.getX()-player.getRadius(), player.getY()-player.getRadius(),
+                            player.getRadius()*2, player.getRadius()*2, null); // img
                 toRemove.clear();
                 for (Circle c : list) {
                     draw(c, g);
@@ -131,6 +138,7 @@ public class App {
 
     private void newGame() {
         // speed = 3;
+        score = 0;
         akl = new AllKeyListener();
         ekl = new EnterKeyListener();
         toRemove = new ArrayList<>();
@@ -180,7 +188,7 @@ public class App {
         //     }
         // }); 
         img = Toolkit.getDefaultToolkit().createImage(
-            System.getProperty("user.dir") + File.separator + "source" + File.separator + "CS.png"
+            System.getProperty("user.dir") + File.separator + "source" + File.separator + "fight.png"
         );
         // increaseSpeedTimer.start();
         f.addKeyListener(akl);
