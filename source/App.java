@@ -55,12 +55,16 @@ public class App {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
-                // g.drawImage(background, 0, 0, null);
+                g.drawImage(background, 0, 0, null);
                 if (isPlayerActive) {
                     player.draw(g);
                 }
                 if (isCircleActive) {
                     for (Circle c : list) {
+                        if (c.getImage() == evilSmileImage) {
+                            g.drawImage(c.getImage(), c.getX()-c.getRadius(),
+                            c.getY()-c.getRadius(), c.getRadius()*2, c.getRadius()*2, null);
+                        }
                         c.draw(g);
                     }
                 }
@@ -128,6 +132,9 @@ public class App {
         evilImage = Toolkit.getDefaultToolkit().createImage(
             System.getProperty("user.dir") + File.separator + "source" + File.separator + "evil.png"
         );
+        evilSmileImage = Toolkit.getDefaultToolkit().createImage(
+            System.getProperty("user.dir") + File.separator + "source" + File.separator + "evilsmile.png"
+        );
         background = Toolkit.getDefaultToolkit().createImage(
             System.getProperty("user.dir") + File.separator + "source" + File.separator + "background.jpg"
         );
@@ -135,8 +142,11 @@ public class App {
         p.setBackground(Color.DARK_GRAY);
         newGame();
         isPlayerActive = true;
-        f.addKeyListener(enter);
         playerTimer.start();
+        f.addKeyListener(enter);
+        f.addKeyListener(arrow);
+        isCircleActive = true;
+        isScoreActive = true;
     } // detailComponents
     
     private void newGame() {
@@ -146,15 +156,10 @@ public class App {
         player = new Player(300, 600, 10, happyImage);
         score = 0;
         list.clear();
-        f.addKeyListener(arrow);
     }
-
+    
     private void play() {
-        f.removeKeyListener(enter);
         isStarted = true;
-        isPlayerActive = true;
-        isCircleActive = true;
-        isScoreActive = true;
         circleTimer.start();
         spawnTimer.start();
         playerTimer.start();
@@ -168,7 +173,6 @@ public class App {
         scoreTimer.stop();
         isGameOver = true;
         player.setImage(sadImage);
-        f.addKeyListener(enter);
     }
 
     private void drawScore(Graphics g) {
@@ -200,7 +204,7 @@ public class App {
     private class ArrowKeyListener extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
-            super.keyPressed(e);
+            if (isGameOver) return;
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_LEFT) {
                 player.setSpeed(-1);
@@ -219,6 +223,7 @@ public class App {
         }
         @Override
         public void keyReleased(KeyEvent e) {
+            if (isGameOver) return;
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT) {
                 player.setSpeed(0);
@@ -229,6 +234,7 @@ public class App {
     private class EnterKeyListener extends KeyAdapter {
         @Override
         public void keyReleased(KeyEvent e) {
+            if (isStarted && !isGameOver) return;
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_ENTER) {
                 System.out.println("play");

@@ -7,9 +7,9 @@ import java.awt.Image;
 public class Circle {
     private int x;
     private int y;
-    protected int radius;
-    protected Color color;
-    protected int speed;
+    private int radius;
+    private Color color;
+    private int speed;
     private Image image;
 
     public Circle(int x, int y, int r, Image img) {
@@ -109,6 +109,10 @@ public class Circle {
         color = Color.getHSBColor((6-radius/10)*0.1f, 1, 0.8f);
     }
 
+    public void setColor(float b) {
+        color = Color.getHSBColor((6-radius/10)*0.1f, 1, b);
+    }
+
     public int getSpeed() {
         return speed;
     }
@@ -121,6 +125,10 @@ public class Circle {
         } else {
             speed = 0;
         }
+    }
+
+    public Image getImage() {
+        return image;
     }
 
     public void setImage(Image img) {
