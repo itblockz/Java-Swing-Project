@@ -13,6 +13,7 @@ import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 
 public class App {
@@ -22,13 +23,16 @@ public class App {
     private boolean isStarted;
     private Timer spawnTimer;
     private Timer circleTimer;
-    private Timer playerTimer;
     private Timer scoreTimer;
+    private Timer speedUpTimer;
+    private Timer playerTimer;
+    private Timer bonusTimer;
     private Player player;
     private EnterKeyListener enter = new EnterKeyListener();
     private ArrowKeyListener arrow = new ArrowKeyListener();
     private ArrayList<Circle> list = new ArrayList<>();
     private ArrayList<Circle> toRemove = new ArrayList<>();
+    private HashMap<Circle, Integer> bonus = new HashMap<>();
     private int seed;
     private Random random;
     private boolean isPlayerActive;
@@ -40,9 +44,10 @@ public class App {
     private Image evilSmileImage;
     private Image background;
     private int score;
+    private int delay;
 
     public App() {
-        f = new JFrame("Keeky");
+        f = new JFrame("Size Control");
         f.setSize(600, 700);
         f.setResizable(false);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -55,21 +60,18 @@ public class App {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
-                g.drawImage(background, 0, 0, null);
+                // g.drawImage(background, 0, 0, null);
                 if (isPlayerActive) {
                     player.draw(g);
                 }
                 if (isCircleActive) {
                     for (Circle c : list) {
-                        if (c.getImage() == evilSmileImage) {
-                            g.drawImage(c.getImage(), c.getX()-c.getRadius(),
-                            c.getY()-c.getRadius(), c.getRadius()*2, c.getRadius()*2, null);
-                        }
                         c.draw(g);
                     }
                 }
                 if (isScoreActive) {
                     drawScore(g);
+                    drawBonus(g);
                 }
                 if (!isStarted) {
                     drawPrepareGame(g);
@@ -102,6 +104,31 @@ public class App {
                 score++;
             }
         }); // scoreTimer
+        speedUpTimer = new Timer(10000, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (delay > 100) {
+                    delay -= 50;
+                    spawnTimer.setDelay(delay);
+                    System.out.println(delay);
+                }
+            }
+        });
+        bonusTimer = new Timer(1, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                toRemove.clear();
+                for (var entry : bonus.entrySet()) {
+                    entry.setValue(entry.getValue()+1);
+                    if (entry.getValue() == 50) {
+                        toRemove.add(entry.getKey());
+                    }
+                }
+                for (Circle c : toRemove) {
+                    bonus.remove(c);
+                }
+            }
+        });
         playerTimer = new Timer(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -112,9 +139,14 @@ public class App {
                 }
                 toRemove.clear();
                 for (Circle c : list) {
-                    if ((player.isCollide(c) && player.compare(c) > 0)|| c.getY() - c.getRadius() > p.getHeight()) {
+                    if ((player.isCollide(c) && player.compare(c) > 0)) {
                         toRemove.add(c);
-                    } else if (player.isCollide(c)) {
+                        score += c.getRadius();
+                        bonus.put(c, 0);
+                    } else if (c.getY() - c.getRadius() > p.getHeight()) {
+                        toRemove.add(c);
+                    }
+                        else if (player.isCollide(c)) {
                         c.setImage(evilSmileImage);
                         gameover();
                         break;
@@ -141,12 +173,12 @@ public class App {
         f.add(p);
         p.setBackground(Color.DARK_GRAY);
         newGame();
+        isCircleActive = true;
+        isScoreActive = true;
         isPlayerActive = true;
         playerTimer.start();
         f.addKeyListener(enter);
         f.addKeyListener(arrow);
-        isCircleActive = true;
-        isScoreActive = true;
     } // detailComponents
     
     private void newGame() {
@@ -154,23 +186,28 @@ public class App {
         random = new Random(seed);
         isGameOver = false;
         player = new Player(300, 600, 10, happyImage);
-        score = 0;
         list.clear();
+        score = 0;
+        delay = 400;
     }
     
     private void play() {
         isStarted = true;
         circleTimer.start();
         spawnTimer.start();
-        playerTimer.start();
         scoreTimer.start();
+        speedUpTimer.start();
+        bonusTimer.start();
+        playerTimer.start();
     }
 
     private void gameover() {
         circleTimer.stop();
         spawnTimer.stop();
-        playerTimer.stop();
         scoreTimer.stop();
+        speedUpTimer.stop();
+        bonusTimer.stop();
+        playerTimer.stop();
         isGameOver = true;
         player.setImage(sadImage);
     }
@@ -181,10 +218,18 @@ public class App {
         g.drawString("Score " + score, 20, 50);
     }
 
+    private void drawBonus(Graphics g) {
+        for (Circle c : bonus.keySet()) {
+            c.drawText(g);
+        }
+        // System.out.println(bonus.size());
+    }
+
     private void drawPrepareGame(Graphics g) {
-        g.setFont(p.getFont().deriveFont(70.0f));
+        g.setFont(p.getFont().deriveFont(60.0f));
         g.setColor(Color.PINK);
-        g.drawString("KEEKY", 180, 300);
+        g.drawString("SIZE", 220, 220);
+        g.drawString("CONTROL", 140, 300);
 
         g.setFont(p.getFont().deriveFont(20.0f));
         g.setColor(Color.LIGHT_GRAY);
@@ -237,7 +282,6 @@ public class App {
             if (isStarted && !isGameOver) return;
             int key = e.getKeyCode();
             if (key == KeyEvent.VK_ENTER) {
-                System.out.println("play");
                 newGame();
                 play();
                 p.repaint();

@@ -21,6 +21,11 @@ public class Circle {
         setSpeed(1);
     }
 
+    public void drawText(Graphics g) {
+        g.setColor(Color.GREEN);
+        g.drawString("+"+radius, x, y);
+    }
+
     public void draw(Graphics g) {
         g.setColor(color);
         g.fillOval(x-radius, y-radius, radius*2, radius*2);
@@ -138,7 +143,5 @@ public class Circle {
     @Override
     public String toString() {
         return "Circle [x=" + x + ", y=" + y + ", radius=" + radius + ", color=" + color + "]";
-    }
-
-    
+    }  
 }
