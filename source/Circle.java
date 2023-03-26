@@ -15,12 +15,18 @@ public class Circle {
     private Image[] images;
     private Image[] costumes;
     private Image[] faces;
+    private Image[][] costumes2;
+    private int face;
 
     public Circle(int x, int y, int r) {
         this.x = x;
         this.y = y;
         radius = r;
         setColor();
+        imageGroup2();
+    }
+
+    private void imageGroup1() {
         costumes = new Image[5];
         costumes[0] = getImage("costume0.png"); // Mercury
         costumes[1] = getImage("costume1.png"); // Mar
@@ -36,6 +42,16 @@ public class Circle {
         setCostume();
     }
 
+    private void imageGroup2() {
+        costumes2 = new Image[5][4];
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 4; j++) {
+                costumes2[i][j] = getImage2("costume" + i + j + ".png");
+            }
+        }
+        images = new Image[1];
+    }
+
     private Image getImage(String fileName) {
         return Toolkit.getDefaultToolkit().createImage(
             System.getProperty("user.dir")
@@ -45,14 +61,32 @@ public class Circle {
         );
     }
 
+    private Image getImage2(String fileName) {
+        return Toolkit.getDefaultToolkit().createImage(
+            System.getProperty("user.dir")
+            + File.separator + "source"
+            + File.separator + "images2"
+            + File.separator + fileName
+        );
+    }
+
     protected void setFace(int n) {
-        if (n >= 0 && n < faces.length) {
+        if (images.length == 1) {
+            int costume = radius/10 - 1;
+            face = n;
+            images[0] = costumes2[costume][face];
+        } else if (n >= 0 && n < faces.length) {
             images[1] = faces[n];
         }
     }
 
     private void setCostume() {
-        images[0] = costumes[radius/10 - 1];
+        int costume = radius/10 - 1;
+        if (images.length == 1) {
+            images[0] = costumes2[costume][face];
+        } else {
+            images[0] = costumes[costume];
+        }
     }
 
     public void drawText(Graphics g) {
