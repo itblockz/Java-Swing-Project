@@ -235,11 +235,11 @@ public class App {
         g.drawString("SIZE", 220, 270);
         g.drawString("CONTROL", 140, 350);
 
+        g.drawImage(sizeControl, 0, 0, null);
+        
         g.setFont(p.getFont().deriveFont(20.0f));
         g.setColor(Color.LIGHT_GRAY);
         g.drawString("Press Enter to Start", 200, 450);
-
-        g.drawImage(sizeControl, 0, 0, null);
     }
     
     private void drawGameOver(Graphics g) {
