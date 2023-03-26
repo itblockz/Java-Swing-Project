@@ -38,7 +38,8 @@ public class App {
     private boolean isCircleVisible;
     private boolean isScoreVisible;
     private Image background;
-    private Image gameover;
+    private Image gameOver;
+    private Image sizeControl;
     private int score;
     private int delay;
     private int lastDraw;
@@ -161,11 +162,17 @@ public class App {
             + File.separator + "images"
             + File.separator + "background.png"
         );
-        gameover = Toolkit.getDefaultToolkit().createImage(
+        gameOver = Toolkit.getDefaultToolkit().createImage(
             System.getProperty("user.dir")
             + File.separator + "source"
             + File.separator + "images"
-            + File.separator + "gameover3.png"
+            + File.separator + "gameOver3.png"
+        );
+        sizeControl = Toolkit.getDefaultToolkit().createImage(
+            System.getProperty("user.dir")
+            + File.separator + "source"
+            + File.separator + "images"
+            + File.separator + "sizeControl2.png"
         );
         f.add(p);
         p.setBackground(Color.DARK_GRAY);
@@ -225,12 +232,14 @@ public class App {
     private void drawPrepareGame(Graphics g) {
         g.setFont(p.getFont().deriveFont(60.0f));
         g.setColor(Color.PINK);
-        g.drawString("SIZE", 220, 220);
-        g.drawString("CONTROL", 140, 300);
+        g.drawString("SIZE", 220, 270);
+        g.drawString("CONTROL", 140, 350);
 
         g.setFont(p.getFont().deriveFont(20.0f));
         g.setColor(Color.LIGHT_GRAY);
-        g.drawString("Press Enter to Start", 200, 400);
+        g.drawString("Press Enter to Start", 200, 450);
+
+        g.drawImage(sizeControl, 0, 0, null);
     }
     
     private void drawGameOver(Graphics g) {
@@ -242,7 +251,7 @@ public class App {
         g.setColor(Color.LIGHT_GRAY);
         g.drawString("Press Enter to Restart", 200, 450);
 
-        g.drawImage(gameover, 0, 0, null);
+        g.drawImage(gameOver, 0, 0, null);
     }
 
     private class EnterKeyListener extends KeyAdapter {
