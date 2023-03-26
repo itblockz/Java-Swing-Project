@@ -166,13 +166,13 @@ public class App {
             System.getProperty("user.dir")
             + File.separator + "source"
             + File.separator + "images"
-            + File.separator + "gameOver3.png"
+            + File.separator + "gameOver.png"
         );
         sizeControl = Toolkit.getDefaultToolkit().createImage(
             System.getProperty("user.dir")
             + File.separator + "source"
             + File.separator + "images"
-            + File.separator + "sizeControl2.png"
+            + File.separator + "sizeControl.png"
         );
         f.add(p);
         p.setBackground(Color.DARK_GRAY);
@@ -235,11 +235,11 @@ public class App {
         g.drawString("SIZE", 220, 270);
         g.drawString("CONTROL", 140, 350);
 
-        // g.drawImage(sizeControl, 0, 0, null);
+        g.drawImage(sizeControl, 0, 0, null);
         
         g.setFont(p.getFont().deriveFont(20.0f));
         g.setColor(Color.YELLOW);
-        g.drawString("Press Enter to Start", 200, 450);
+        g.drawString("Press Enter to Start", 200, 500);
     }
     
     private void drawGameOver(Graphics g) {
@@ -247,11 +247,11 @@ public class App {
         g.setColor(Color.PINK);
         g.drawString("Game Over", 120, 350);
         
-        // g.drawImage(gameOver, 0, 0, null);
+        g.drawImage(gameOver, 0, 0, null);
 
         g.setFont(p.getFont().deriveFont(20.0f));
         g.setColor(Color.YELLOW);
-        g.drawString("Press Enter to Restart", 200, 450);
+        g.drawString("Press Enter to Restart", 200, 500);
     }
 
     private class EnterKeyListener extends KeyAdapter {

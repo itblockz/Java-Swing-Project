@@ -30,7 +30,7 @@ public class Circle {
     private void imageGroup1() {
         costumes = new Image[5];
         costumes[0] = getImage("costume0.png"); // Mercury
-        costumes[1] = getImage("costume1.png"); // Mar
+        costumes[1] = getImage("costume1.png"); // Mars
         costumes[2] = getImage("costume2.png"); // Venus
         costumes[3] = getImage("costume3.png"); // Earth
         costumes[4] = getImage("costume4.png"); // Neptune
