@@ -30,18 +30,14 @@ public class App {
     private Player player;
     private EnterKeyListener enter = new EnterKeyListener();
     private ArrowKeyListener arrow = new ArrowKeyListener();
-    private ArrayList<Circle> list = new ArrayList<>();
-    private ArrayList<Circle> toRemove = new ArrayList<>();
-    private HashMap<Circle, Integer> bonus = new HashMap<>();
+    private ArrayList<Enemy> list = new ArrayList<>();
+    private ArrayList<Enemy> toRemove = new ArrayList<>();
+    private HashMap<Enemy, Integer> bonus = new HashMap<>();
     private int seed;
     private Random random;
-    private boolean isPlayerActive;
-    private boolean isCircleActive;
-    private boolean isScoreActive;
-    private Image happyImage;
-    private Image sadImage;
-    private Image evilImage;
-    private Image evilSmileImage;
+    private boolean isPlayerVisible;
+    private boolean isCircleVisible;
+    private boolean isScoreVisible;
     private Image background;
     private int score;
     private int delay;
@@ -60,16 +56,16 @@ public class App {
             @Override
             public void paint(Graphics g) {
                 super.paint(g);
-                // g.drawImage(background, 0, 0, null);
-                if (isPlayerActive) {
+                g.drawImage(background, 0, 0, null);
+                if (isPlayerVisible) {
                     player.draw(g);
                 }
-                if (isCircleActive) {
-                    for (Circle c : list) {
+                if (isCircleVisible) {
+                    for (Enemy c : list) {
                         c.draw(g);
                     }
                 }
-                if (isScoreActive) {
+                if (isScoreVisible) {
                     drawScore(g);
                     drawBonus(g);
                 }
@@ -87,13 +83,13 @@ public class App {
             public void actionPerformed(ActionEvent e) {
                 int x = random.nextInt(580) + 10;
                 int radius = (random.nextInt(5)+1)*10;
-                list.add(new Circle(x, 0, radius, evilImage));
+                list.add(new Enemy(x, 0, radius));
             }
         }); // spawnTimer
         circleTimer = new Timer(1, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                for (Circle c : list) {
+                for (Enemy c : list) {
                     c.translate(0, c.getSpeed()+5);
                 }
             } 
@@ -110,7 +106,6 @@ public class App {
                 if (delay > 100) {
                     delay -= 50;
                     spawnTimer.setDelay(delay);
-                    System.out.println(delay);
                 }
             }
         });
@@ -124,7 +119,7 @@ public class App {
                         toRemove.add(entry.getKey());
                     }
                 }
-                for (Circle c : toRemove) {
+                for (Enemy c : toRemove) {
                     bonus.remove(c);
                 }
             }
@@ -138,16 +133,16 @@ public class App {
                     player.translate(player.getSpeed(), 0);
                 }
                 toRemove.clear();
-                for (Circle c : list) {
-                    if ((player.isCollide(c) && player.compare(c) > 0)) {
+                for (Enemy c : list) {
+                    if (c.getY() - c.getRadius() > p.getHeight()) {
+                        toRemove.add(c);
+                    } else if ((player.isCollide(c) && player.compare(c) > 0)) {
                         toRemove.add(c);
                         score += c.getRadius();
                         bonus.put(c, 0);
-                    } else if (c.getY() - c.getRadius() > p.getHeight()) {
-                        toRemove.add(c);
-                    }
-                        else if (player.isCollide(c)) {
-                        c.setImage(evilSmileImage);
+                    } else if (player.isCollide(c)) {
+                        player.lose();
+                        c.win();
                         gameover();
                         break;
                     }
@@ -155,27 +150,18 @@ public class App {
                 list.removeAll(toRemove);
             }
         }); // playerTimer
-        happyImage = Toolkit.getDefaultToolkit().createImage(
-            System.getProperty("user.dir") + File.separator + "source" + File.separator + "happy.png"
-        );
-        sadImage = Toolkit.getDefaultToolkit().createImage(
-            System.getProperty("user.dir") + File.separator + "source" + File.separator + "sad.png"
-        );
-        evilImage = Toolkit.getDefaultToolkit().createImage(
-            System.getProperty("user.dir") + File.separator + "source" + File.separator + "evil.png"
-        );
-        evilSmileImage = Toolkit.getDefaultToolkit().createImage(
-            System.getProperty("user.dir") + File.separator + "source" + File.separator + "evilsmile.png"
-        );
         background = Toolkit.getDefaultToolkit().createImage(
-            System.getProperty("user.dir") + File.separator + "source" + File.separator + "background.jpg"
+            System.getProperty("user.dir")
+            + File.separator + "source"
+            + File.separator + "images"
+            + File.separator + "background.png"
         );
         f.add(p);
         p.setBackground(Color.DARK_GRAY);
         newGame();
-        isCircleActive = true;
-        isScoreActive = true;
-        isPlayerActive = true;
+        isCircleVisible = true;
+        isScoreVisible = true;
+        isPlayerVisible = true;
         playerTimer.start();
         f.addKeyListener(enter);
         f.addKeyListener(arrow);
@@ -185,10 +171,11 @@ public class App {
         seed = new Random().nextInt();
         random = new Random(seed);
         isGameOver = false;
-        player = new Player(300, 600, 10, happyImage);
+        player = new Player(300, 600, 10);
         list.clear();
         score = 0;
         delay = 400;
+        spawnTimer.setDelay(delay);
     }
     
     private void play() {
@@ -209,7 +196,6 @@ public class App {
         bonusTimer.stop();
         playerTimer.stop();
         isGameOver = true;
-        player.setImage(sadImage);
     }
 
     private void drawScore(Graphics g) {
@@ -219,7 +205,7 @@ public class App {
     }
 
     private void drawBonus(Graphics g) {
-        for (Circle c : bonus.keySet()) {
+        for (Enemy c : bonus.keySet()) {
             c.drawText(g);
         }
         // System.out.println(bonus.size());
