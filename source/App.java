@@ -235,10 +235,10 @@ public class App {
         g.drawString("SIZE", 220, 270);
         g.drawString("CONTROL", 140, 350);
 
-        g.drawImage(sizeControl, 0, 0, null);
+        // g.drawImage(sizeControl, 0, 0, null);
         
         g.setFont(p.getFont().deriveFont(20.0f));
-        g.setColor(Color.LIGHT_GRAY);
+        g.setColor(Color.YELLOW);
         g.drawString("Press Enter to Start", 200, 450);
     }
     
@@ -246,12 +246,12 @@ public class App {
         g.setFont(p.getFont().deriveFont(70.0f));
         g.setColor(Color.PINK);
         g.drawString("Game Over", 120, 350);
+        
+        // g.drawImage(gameOver, 0, 0, null);
 
         g.setFont(p.getFont().deriveFont(20.0f));
-        g.setColor(Color.LIGHT_GRAY);
+        g.setColor(Color.YELLOW);
         g.drawString("Press Enter to Restart", 200, 450);
-
-        g.drawImage(gameOver, 0, 0, null);
     }
 
     private class EnterKeyListener extends KeyAdapter {
