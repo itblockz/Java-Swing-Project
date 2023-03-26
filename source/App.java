@@ -28,7 +28,7 @@ public class App {
     private Timer playerTimer;
     private Timer bonusTimer;
     private Player player;
-    private EnterKeyListener enter;
+    private EnterKeyListener enter  = new EnterKeyListener();
     private ArrayList<Enemy> list = new ArrayList<>();
     private ArrayList<Enemy> toRemove = new ArrayList<>();
     private HashMap<Enemy, Integer> bonus = new HashMap<>();
@@ -38,8 +38,10 @@ public class App {
     private boolean isCircleVisible;
     private boolean isScoreVisible;
     private Image background;
+    private Image gameover;
     private int score;
     private int delay;
+    private int lastDraw;
 
     public App() {
         f = new JFrame("Size Control");
@@ -75,13 +77,17 @@ public class App {
                     repaint();
                 } else {
                     drawGameOver(g);
+                    if (lastDraw < 20) {
+                        repaint();
+                    }
+                    lastDraw++;
                 }
             }
         }; // JPanel
         spawnTimer = new Timer(250, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int x = random.nextInt(580) + 10;
-                int radius = (random.nextInt(5)+1)*10;
+                int radius = (random.nextInt(5)+2)*10;
                 list.add(new Enemy(x, 0, radius));
             }
         }); // spawnTimer
@@ -89,7 +95,7 @@ public class App {
             @Override
             public void actionPerformed(ActionEvent e) {
                 for (Enemy c : list) {
-                    c.translate(0, c.getSpeed()+5);
+                    c.translate(0, c.getSpeed()+3);
                 }
             } 
         }); // circleTimer
@@ -155,9 +161,14 @@ public class App {
             + File.separator + "images"
             + File.separator + "background.png"
         );
+        gameover = Toolkit.getDefaultToolkit().createImage(
+            System.getProperty("user.dir")
+            + File.separator + "source"
+            + File.separator + "images"
+            + File.separator + "gameover3.png"
+        );
         f.add(p);
         p.setBackground(Color.DARK_GRAY);
-        enter = new EnterKeyListener();
         f.addKeyListener(enter);
         newGame(); 
         isCircleVisible = true;
@@ -170,12 +181,13 @@ public class App {
         seed = new Random().nextInt();
         random = new Random(seed);
         isGameOver = false;
-        player = new Player(300, 600, 10);
+        player = new Player(300, 600, 20);
         player.addKeyListenerBy(f);
         list.clear();
         score = 0;
         delay = 400;
         spawnTimer.setDelay(delay);
+        lastDraw = 0;
     }
     
     private void play() {
@@ -228,7 +240,9 @@ public class App {
 
         g.setFont(p.getFont().deriveFont(20.0f));
         g.setColor(Color.LIGHT_GRAY);
-        g.drawString("Press Enter to Restart", 200, 400);
+        g.drawString("Press Enter to Restart", 200, 450);
+
+        g.drawImage(gameover, 0, 0, null);
     }
 
     private class EnterKeyListener extends KeyAdapter {

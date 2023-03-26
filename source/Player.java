@@ -46,11 +46,11 @@ public class Player extends Circle implements Losable{
                 setSpeed(1);
             }
             if (key == KeyEvent.VK_UP) {
-                if (getRadius() < 40) {
+                if (getRadius() < MAX - 10) {
                     changeRadius(10);
                 }
             } else if (key == KeyEvent.VK_DOWN) {
-                if (getRadius() > 10) {
+                if (getRadius() > MAX - 40) {
                     changeRadius(-10);
                 }
             }

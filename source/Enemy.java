@@ -19,6 +19,6 @@ public class Enemy extends Circle implements Winnable{
 
     @Override
     public void setColor() {
-        setColor(0.8f);
+        setColor(0.5f);
     }
 }
