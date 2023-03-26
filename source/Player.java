@@ -1,16 +1,20 @@
 package source;
 
-import java.awt.Image;
+@FunctionalInterface
+interface Losable {
+    public void lose();
+}
 
-public class Player extends Circle {
+public class Player extends Circle implements Losable{
 
-    public Player(int x, int y, int radius, Image img) {
-        super(x, y, radius, img);
+    public Player(int x, int y, int radius) {
+        super(x, y, radius);
         setSpeed(0);
+        setFace(2);
     }
 
     @Override
-    public void setColor() {
-        setColor(1);
+    public void lose() {
+        setFace(3);
     }
 }
