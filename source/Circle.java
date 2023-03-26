@@ -17,6 +17,7 @@ public class Circle {
     private Image[] faces;
     private Image[][] costumes2;
     private int face;
+    public final int MAX = 60;
 
     public Circle(int x, int y, int r) {
         this.x = x;
@@ -72,7 +73,7 @@ public class Circle {
 
     protected void setFace(int n) {
         if (images.length == 1) {
-            int costume = radius/10 - 1;
+            int costume = 4 - (MAX - radius)/10;
             face = n;
             images[0] = costumes2[costume][face];
         } else if (n >= 0 && n < faces.length) {
@@ -81,7 +82,7 @@ public class Circle {
     }
 
     private void setCostume() {
-        int costume = radius/10 - 1;
+        int costume = 4 - (MAX - radius)/10;
         if (images.length == 1) {
             images[0] = costumes2[costume][face];
         } else {
@@ -187,11 +188,11 @@ public class Circle {
     }
 
     protected void setColor() {
-        color = Color.getHSBColor((6-radius/10)*0.1f, 1, 1);
+        color = Color.getHSBColor((MAX-radius)/10*0.1f, 1, 1);
     }
 
     protected void setColor(float b) {
-        color = Color.getHSBColor((6-radius/10)*0.1f, 1, b);
+        color = Color.getHSBColor((MAX-radius)/10*0.1f, 1, b);
     }
 
     public int getSpeed() {
@@ -200,9 +201,9 @@ public class Circle {
 
     public void setSpeed(int spd) {
         if (spd > 0) {
-            speed = 6 - radius/10;
+            speed = (MAX - radius)/10 + 1;
         } else if (spd < 0) {
-            speed = radius/10 - 6;
+            speed = (radius - MAX)/10 - 1;
         } else {
             speed = 0;
         }
