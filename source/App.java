@@ -28,8 +28,7 @@ public class App {
     private Timer playerTimer;
     private Timer bonusTimer;
     private Player player;
-    private EnterKeyListener enter = new EnterKeyListener();
-    private ArrowKeyListener arrow = new ArrowKeyListener();
+    private EnterKeyListener enter;
     private ArrayList<Enemy> list = new ArrayList<>();
     private ArrayList<Enemy> toRemove = new ArrayList<>();
     private HashMap<Enemy, Integer> bonus = new HashMap<>();
@@ -158,13 +157,13 @@ public class App {
         );
         f.add(p);
         p.setBackground(Color.DARK_GRAY);
-        newGame();
+        enter = new EnterKeyListener();
+        f.addKeyListener(enter);
+        newGame(); 
         isCircleVisible = true;
         isScoreVisible = true;
         isPlayerVisible = true;
         playerTimer.start();
-        f.addKeyListener(enter);
-        f.addKeyListener(arrow);
     } // detailComponents
     
     private void newGame() {
@@ -172,6 +171,7 @@ public class App {
         random = new Random(seed);
         isGameOver = false;
         player = new Player(300, 600, 10);
+        player.addKeyListenerBy(f);
         list.clear();
         score = 0;
         delay = 400;
@@ -208,7 +208,6 @@ public class App {
         for (Enemy c : bonus.keySet()) {
             c.drawText(g);
         }
-        // System.out.println(bonus.size());
     }
 
     private void drawPrepareGame(Graphics g) {
@@ -230,36 +229,6 @@ public class App {
         g.setFont(p.getFont().deriveFont(20.0f));
         g.setColor(Color.LIGHT_GRAY);
         g.drawString("Press Enter to Restart", 200, 400);
-    }
-
-    private class ArrowKeyListener extends KeyAdapter {
-        @Override
-        public void keyPressed(KeyEvent e) {
-            if (isGameOver) return;
-            int key = e.getKeyCode();
-            if (key == KeyEvent.VK_LEFT) {
-                player.setSpeed(-1);
-            } else if (key == KeyEvent.VK_RIGHT) {
-                player.setSpeed(1);
-            }
-            if (key == KeyEvent.VK_UP) {
-                if (player.getRadius() < 40) {
-                    player.changeRadius(10);
-                }
-            } else if (key == KeyEvent.VK_DOWN) {
-                if (player.getRadius() > 10) {
-                    player.changeRadius(-10);
-                }
-            }
-        }
-        @Override
-        public void keyReleased(KeyEvent e) {
-            if (isGameOver) return;
-            int key = e.getKeyCode();
-            if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT) {
-                player.setSpeed(0);
-            }
-        }
     }
 
     private class EnterKeyListener extends KeyAdapter {
