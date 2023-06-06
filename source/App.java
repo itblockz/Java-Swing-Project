@@ -7,6 +7,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.awt.event.KeyAdapter;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -15,6 +18,7 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Scanner;
 
 public class App {
     private JFrame f;
@@ -37,12 +41,14 @@ public class App {
     private boolean isPlayerVisible;
     private boolean isCircleVisible;
     private boolean isScoreVisible;
+    private boolean isBonusVisible;
     private Image background;
     private Image gameOver;
     private Image sizeControl;
     private int score;
     private int delay;
     private int lastDraw;
+    private int highScore;
 
     public App() {
         f = new JFrame("Size Control");
@@ -69,6 +75,8 @@ public class App {
                 }
                 if (isScoreVisible) {
                     drawScore(g);
+                }
+                if (isBonusVisible) {
                     drawBonus(g);
                 }
                 if (!isStarted) {
@@ -78,14 +86,14 @@ public class App {
                     repaint();
                 } else {
                     drawGameOver(g);
-                    if (lastDraw < 20) {
+                    if (lastDraw < 50) {
                         repaint();
                     }
                     lastDraw++;
                 }
             }
         }; // JPanel
-        spawnTimer = new Timer(250, new ActionListener() {
+        spawnTimer = new Timer(500, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 int x = random.nextInt(580) + 10;
                 int radius = (random.nextInt(5)+2)*10;
@@ -181,39 +189,62 @@ public class App {
         isCircleVisible = true;
         isScoreVisible = true;
         isPlayerVisible = true;
-        playerTimer.start();
+        try (Scanner input = new Scanner(Paths.get("source" + File.separator + "highscore.txt"))) {
+            highScore = Integer.parseInt(input.nextLine());
+        } catch (IOException e) {
+            highScore = 0;
+        }
     } // detailComponents
     
     private void newGame() {
         seed = new Random().nextInt();
         random = new Random(seed);
         isGameOver = false;
+        isStarted = false;
         player = new Player(300, 600, 20);
         player.addKeyListenerBy(f);
         list.clear();
         score = 0;
-        delay = 400;
+        delay = 500;
         spawnTimer.setDelay(delay);
         lastDraw = 0;
+        playerTimer.start();
     }
     
     private void play() {
         isStarted = true;
+        isBonusVisible = true;
+        player = new Player(300, 600, 20);
+        player.addKeyListenerBy(f);
+        playerTimer.restart();
         circleTimer.start();
         spawnTimer.start();
         scoreTimer.start();
         speedUpTimer.start();
         bonusTimer.start();
-        playerTimer.start();
     }
 
     private void gameover() {
+        try (Scanner input = new Scanner(Paths.get("source" + File.separator + "highscore.txt"))) {
+            highScore = Integer.parseInt(input.nextLine());
+        } catch (IOException e) {
+            System.out.println(e);
+        }
+        if (score > highScore) {
+            try (FileWriter writer = new FileWriter("source" + File.separator + "highscore.txt")) {
+                writer.write(Integer.toString(score));
+            } catch (IOException e) {
+                System.out.println(e);
+            }
+            highScore = score;
+        }
         circleTimer.stop();
         spawnTimer.stop();
         scoreTimer.stop();
         speedUpTimer.stop();
-        bonusTimer.stop();
+        // bonusTimer.stop();
         playerTimer.stop();
+        isBonusVisible = false;
         isGameOver = true;
     }
 
@@ -221,6 +252,10 @@ public class App {
         g.setFont(p.getFont().deriveFont(20.0f));
         g.setColor(Color.YELLOW);
         g.drawString("Score " + score, 20, 50);
+
+        g.setFont(p.getFont().deriveFont(20.0f));
+        g.setColor(Color.ORANGE);
+        g.drawString("High Score " + highScore, 420, 50);
     }
 
     private void drawBonus(Graphics g) {
@@ -266,4 +301,4 @@ public class App {
             }
         }
     }
-} // App2
+} // App
