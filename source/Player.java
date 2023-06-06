@@ -26,7 +26,7 @@ public class Player extends Circle implements Losable{
         for (int i = 1; i < l.length; i++) {
             f.removeKeyListener(l[i]);
         }
-        f.addKeyListener(new ArrowKeyListener());
+        f.addKeyListener(new ControlKeyListener());
     }
 
     @Override
@@ -35,21 +35,21 @@ public class Player extends Circle implements Losable{
         setFace(3);
     }
 
-    private class ArrowKeyListener extends KeyAdapter {
+    private class ControlKeyListener extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
             if (isLose) return;
             int key = e.getKeyCode();
-            if (key == KeyEvent.VK_LEFT) {
+            if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_A) {
                 setSpeed(-1);
-            } else if (key == KeyEvent.VK_RIGHT) {
+            } else if (key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_D) {
                 setSpeed(1);
             }
-            if (key == KeyEvent.VK_UP) {
+            if (key == KeyEvent.VK_UP || key == KeyEvent.VK_W) {
                 if (getRadius() < MAX - 10) {
                     changeRadius(10);
                 }
-            } else if (key == KeyEvent.VK_DOWN) {
+            } else if (key == KeyEvent.VK_DOWN || key == KeyEvent.VK_S) {
                 if (getRadius() > MAX - 40) {
                     changeRadius(-10);
                 }
@@ -59,7 +59,7 @@ public class Player extends Circle implements Losable{
         public void keyReleased(KeyEvent e) {
             if (isLose) return;
             int key = e.getKeyCode();
-            if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT) {
+            if (key == KeyEvent.VK_LEFT || key == KeyEvent.VK_RIGHT || key == KeyEvent.VK_A || key == KeyEvent.VK_D) {
                 setSpeed(0);
             }
         }
